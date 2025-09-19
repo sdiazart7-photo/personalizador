@@ -1,719 +1,590 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personalizador de Paquete de Boda - Estilo Cinematográfico</title>
+    <title>La Mesa de Edición de Bodas - Fotografía Esencial</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        :root {
-            --main-bg: #f8f7f3;
-            --container-bg: #ffffff;
-            --text-main: #2b2b2b;
-            --text-secondary: #5f5f5f;
-            --accent: #937b63;
-            --accent-text: #f8f7f3;
-            --accent-light: rgba(147, 123, 99, 0.08);
-            --border-color: #e0e0e0;
-            --included-border: #3B82F6;
-            --included-bg: rgba(59, 130, 246, 0.1);
+        @font-face {
+            font-family: 'The Seasons';
+            src: url('https://res.cloudinary.com/drrhn6t1c/raw/upload/v1755826797/Fontspring-DEMO-theseasons-lt_wuifpf.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Glacial Indifference';
+            src: url('https://res.cloudinary.com/drrhn6t1c/raw/upload/v1755827417/GlacialIndifference-Regular_z5pngu.otf') format('opentype');
         }
 
-        html, body {
-            height: 100%;
+        :root {
+            --bg-main: #FDFCF9;
+            --bg-card: #FFFFFF;
+            --text-dark: #2d2d2d;
+            --text-light: #6b6b6b;
+            --accent: #937b63;
+            --accent-light: rgba(147, 123, 99, 0.1);
+            --border-color: #EAEAEA;
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--main-bg);
-            color: var(--text-main);
-            display: flex;
-            flex-direction: column;
+            font-family: 'Glacial Indifference', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-dark);
         }
-        .clapper-icon {
-            width: 1.2em;
-            height: 1.2em;
-            margin-right: 0.5em;
-            display: inline-block;
-            vertical-align: text-bottom;
+
+        h1, h2, h3 {
+            font-family: 'The Seasons', serif;
+            text-transform: uppercase;
+        }
+
+        .text-accent { color: var(--accent); }
+        .bg-accent { background-color: var(--accent); }
+        .border-accent { border-color: var(--accent); }
+        .bg-accent-light { background-color: var(--accent-light); }
+        
+        #hero {
+            background-image: url('https://res.cloudinary.com/drrhn6t1c/image/upload/v1755893180/a_r_-_web_28_eram4m.jpg');
+            background-size: cover;
+            background-position: center 30%;
+            position: relative;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 1;
+        }
+        #hero > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .hour-btn {
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+        .hour-btn.selected {
+            border-color: var(--accent);
+            background-color: var(--accent-light);
             color: var(--accent);
+            transform: scale(1.05);
         }
-        .section {
-            display: none;
+
+        .extra-card {
+            border: 2px solid var(--border-color);
+            background-color: var(--bg-card);
+            transition: all 0.3s ease;
+            padding-top: 2rem; /* Add padding for the new label position */
         }
-        .section.active {
-            display: block;
-            animation: fadeIn 0.5s ease-in-out;
+        .extra-card.selected {
+            border-color: var(--accent);
+            background-color: var(--accent-light);
         }
+        .extra-card.included {
+            border-color: var(--accent);
+            background-color: var(--accent-light);
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background-color: var(--border-color);
+            z-index: 0;
+        }
+        .timeline-item {
+            z-index: 1;
+        }
+        
+        #summary-modal {
+            transition: opacity 0.3s ease;
+        }
+
+        .fade-in {
+            animation: fadeIn 1s ease-out forwards;
+            opacity: 0;
+        }
+        
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
         
-        .main-container { 
-            background-color: var(--container-bg); 
-            box-shadow: 0 10px 20px -5px rgba(0,0,0,0.07);
-        }
-        .text-accent { color: var(--accent); }
-        .bg-accent { background-color: var(--accent); }
-        .text-accent-contrast { color: var(--accent-text); }
-        .border-accent { border-color: var(--accent); }
-        .text-secondary { color: var(--text-secondary); }
-        .border-default { border-color: var(--border-color); }
-        .btn-primary { background-color: var(--accent); color: var(--accent-text); }
-        .btn-primary:hover { filter: brightness(1.1); }
-        .btn-secondary { background-color: #e9ecef; color: #343a40; }
-        .btn-secondary:hover { background-color: #dee2e6; }
-        .btn-download { background-color: #0d6efd; color: white; }
-        .btn-download:hover { background-color: #0b5ed7; }
-
-        input[type=range] { -webkit-appearance: none; width: 100%; background: transparent; }
-        input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; height: 24px; width: 24px; border-radius: 50%; background: var(--accent); cursor: pointer; margin-top: -8px; }
-        input[type=range]::-moz-range-thumb { height: 24px; width: 24px; border-radius: 50%; background: var(--accent); cursor: pointer; }
-        input[type=range]::-webkit-slider-runnable-track { width: 100%; height: 8px; cursor: pointer; background: var(--border-color); border-radius: 5px; }
-        input[type=range]::-moz-range-track { width: 100%; height: 8px; cursor: pointer; background: var(--border-color); border-radius: 5px; }
-        
-        .scene-card { background-color: var(--main-bg); border: 1px solid var(--border-color); }
-        .scene-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(147, 123, 99, 0.1), 0 4px 6px -2px rgba(147, 123, 99, 0.05); }
-        
-        .extra-card { border: 2px solid var(--border-color); background-color: var(--container-bg); transition: background-color 0.3s, border-color 0.3s, opacity 0.3s; }
-        .extra-card.selected { border-color: var(--accent); background-color: var(--accent-light); }
-        .extra-card.included { border-color: var(--included-border); background-color: var(--included-bg); }
-        .extra-status.selected, .extra-status.included { background-color: var(--accent); color: var(--accent-text); }
-        .extra-status.included { background-color: var(--included-border); }
-        
-        #final-summary-card { background-color: var(--container-bg); }
-
-        .coverage-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: #e9ecef;
-            color: #343a40;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .coverage-btn:hover { background-color: #dee2e6; }
-        .coverage-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        .coverage-value { font-size: 1.25rem; font-weight: bold; min-width: 40px; text-align: center; }
-        
-        input[type="text"], input[type="date"] {
-            border: 1px solid var(--border-color);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            width: 100%;
+        .extra-status {
+            font-size: 0.7rem;
+            line-height: 1;
+            background-color: var(--accent);
+            color: white;
         }
     </style>
 </head>
-<body>
+<body class="overflow-x-hidden">
 
-    <div class="container mx-auto p-4 sm:p-6 md:p-8 max-w-7xl flex flex-col flex-grow">
-        
-        <header id="main-header" class="text-center mb-8 md:mb-12">
-            <img src="https://res.cloudinary.com/drrhn6t1c/image/upload/v1752514553/logo-FE-fondoblanco_c8tlxc.png" alt="Logo de Fotografía Esencial" class="mx-auto my-6 w-64 h-auto" crossorigin="anonymous">
-            <h1 class="font-extrabold text-4xl sm:text-5xl md:text-7xl tracking-tight">TU HISTORIA DE PELÍCULA</h1>
-            <p class="text-secondary text-base sm:text-lg mt-2">Personaliza el plan de fotografía para tu boda</p>
-        </header>
-
-        <div id="layout-wrapper" class="flex flex-col lg:flex-row gap-8 flex-grow">
-            <!-- Main Content -->
-            <main id="main-content-area" class="w-full">
-                <div id="sections-container" class="main-container rounded-xl p-4 sm:p-6 md:p-8">
-                    
-                    <!-- Section 0: Welcome -->
-                    <div id="section-0" class="section active">
-                        <div class="text-center max-w-lg mx-auto">
-                            <img src="https://res.cloudinary.com/drrhn6t1c/image/upload/v1752514553/logo-FE-fondoblanco_c8tlxc.png" alt="Logo de Fotografía Esencial" class="mx-auto mb-6 w-48 h-auto" crossorigin="anonymous">
-                            <h2 class="font-bold text-3xl md:text-4xl tracking-tight mb-2">¡Hola! Vamos a crear su paquete ideal</h2>
-                            <p class="text-secondary mb-8">Primero, cuéntenos un poco sobre ustedes.</p>
-                            
-                            <div class="space-y-4 text-left">
-                                <div>
-                                    <label for="couple-names" class="block text-sm font-bold mb-1">Nombres de la pareja</label>
-                                    <input type="text" id="couple-names" placeholder="Ej: Ana y Carlos">
-                                </div>
-                                <div>
-                                    <label for="wedding-date" class="block text-sm font-bold mb-1">Fecha de la boda</label>
-                                    <input type="date" id="wedding-date">
-                                </div>
-                            </div>
-                            
-                            <div class="text-center mt-8">
-                                <button onclick="navigateTo(1)" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
-                                    Comenzar a Personalizar &rarr;
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Section 1: Hours -->
-                    <div id="section-1" class="section">
-                        <h2 class="font-bold text-3xl md:text-4xl tracking-tight mb-4 flex items-center">
-                            <svg class="clapper-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20.4 4.4L15 2L13.2 9L18.6 11.4L20.4 4.4Z" fill="currentColor"></path><path d="M3.6 4.4L9 2L10.8 9L5.4 11.4L3.6 4.4Z" fill="currentColor"></path><path d="M2 21H22V13H2V21Z" fill="currentColor"></path><path d="M12.8 5.1L11.2 5.5L10.4 9H13.6L12.8 5.1Z" fill="#f8f7f3"></path></svg>
-                            <span class="text-accent">Paso 1:</span>&nbsp;Tu Guion
-                        </h2>
-                        <p class="text-secondary mb-6">Define la duración de la cobertura. Cada hora es un capítulo de tu historia.</p>
-                        
-                        <div class="mb-6">
-                            <label for="hours-slider" class="block text-lg font-bold mb-2">Horas de Cobertura: <span id="hours-value" class="text-accent">10</span></label>
-                            <input type="range" id="hours-slider" min="2" max="10" value="2" step="2" class="w-full">
-                            <div class="flex justify-between text-xs text-secondary mt-1">
-                                <span>10hr</span>
-                                <span>6hr</span>
-                                <span>2hr</span>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row justify-between mt-8 gap-4">
-                             <button onclick="navigateTo(0)" class="btn-secondary font-bold py-3 px-8 rounded-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
-                                &larr; Atrás
-                            </button>
-                            <button onclick="navigateTo(2)" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
-                                Siguiente: Escenas a Filmar &rarr;
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Section 2: Coverage Distribution -->
-                    <div id="section-2" class="section">
-                        <h2 class="font-bold text-3xl md:text-4xl tracking-tight mb-4 flex items-center">
-                            <svg class="clapper-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM4 18V6H8V18H4ZM10 18V6H14V18H10ZM16 18V6H20V18H16Z"/></svg>
-                            <span class="text-accent">Paso 2:</span>&nbsp;Escenas a Filmar
-                        </h2>
-                        <p class="text-secondary mb-2">Distribuye las horas contratadas en los momentos clave del día.</p>
-                        <p class="text-lg font-bold mb-6">Horas distribuidas: <span id="coverage-total-hours" class="text-accent">0</span> de <span id="coverage-max-hours">10</span> seleccionadas</p>
-
-                        <div id="coverage-warning" class="bg-red-900 border border-red-500 text-white p-3 rounded-lg mb-4 hidden text-sm"></div>
-
-                        <div id="coverage-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Coverage items will be generated by JS -->
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row justify-between mt-8 gap-4">
-                             <button onclick="navigateTo(1)" class="btn-secondary font-bold py-3 px-8 rounded-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
-                                &larr; Atrás
-                            </button>
-                            <button id="coverage-next-btn" onclick="navigateTo(3)" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
-                                Siguiente: Extras &rarr;
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Section 3: Extras -->
-                    <div id="section-3" class="section">
-                         <h2 class="font-bold text-3xl md:text-4xl tracking-tight mb-4 flex items-center">
-                            <svg class="clapper-icon" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" /></svg>
-                            <span class="text-accent">Paso 3:</span>&nbsp;Extras de Producción
-                        </h2>
-                        <p class="text-secondary mb-6">Añade elementos únicos para hacer tu película inolvidable.</p>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div id="extra-album" class="extra-card p-4 rounded-lg cursor-pointer" onclick="toggleExtra('album')">
-                                <h3 class="font-bold">Álbum Digital</h3>
-                                <p class="text-sm text-secondary">Un emotivo video collage con las mejores fotos de tu día.</p>
-                                <p class="font-bold text-accent mt-2 price-tag">$1,500 MXN</p>
-                                <span class="extra-status text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full mt-2 inline-block"></span>
-                            </div>
-                            <div id="extra-postcredits" class="extra-card p-4 rounded-lg cursor-pointer" onclick="toggleExtra('postCredits')">
-                                <h3 class="font-bold">Escena Post-Créditos</h3>
-                                <p class="text-sm text-secondary">Entrega sorpresa en el día de la boda, cómplice: el novio.</p>
-                                <p class="font-bold text-accent mt-2 price-tag">$2,000 MXN</p>
-                                <span class="extra-status text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full mt-2 inline-block"></span>
-                            </div>
-                            <div id="extra-makeup" class="extra-card p-4 rounded-lg cursor-pointer" onclick="toggleExtra('makeup')">
-                                <h3 class="font-bold">Maquillaje y Peinado</h3>
-                                <p class="text-sm text-secondary">Servicio profesional para el día de la boda.</p>
-                                <p class="font-bold text-accent mt-2 price-tag">$2,500 MXN</p>
-                                <span class="extra-status text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full mt-2 inline-block"></span>
-                            </div>
-                            <div id="extra-savethedate" class="extra-card p-4 rounded-lg cursor-pointer" onclick="toggleExtra('saveTheDate')">
-                                <h3 class="font-bold">Sesión "Save the Date"</h3>
-                                <p class="text-sm text-secondary">Anuncien su boda con estilo.</p>
-                                <p class="font-bold text-accent mt-2 price-tag">$3,300 MXN</p>
-                                <span class="extra-status text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full mt-2 inline-block"></span>
-                            </div>
-                             <div id="extra-extraphotos" class="extra-card p-4 rounded-lg cursor-pointer" onclick="toggleExtra('extraPhotos')">
-                                <h3 class="font-bold">50 Fotos Extras</h3>
-                                <p class="text-sm text-secondary">Asegura aún más recuerdos de tu día especial.</p>
-                                <p class="font-bold text-accent mt-2 price-tag">$1,500 MXN</p>
-                                <span class="extra-status text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full mt-2 inline-block"></span>
-                            </div>
-                            <div id="extra-videographer" class="extra-card p-4 rounded-lg cursor-pointer" onclick="toggleExtra('videographer')">
-                                <h3 class="font-bold">Videógrafo</h3>
-                                <p class="text-sm text-secondary">Un profesional dedicado a capturar tu boda en video.</p>
-                                <span class="extra-status text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full mt-2 inline-block"></span>
-                            </div>
-                             <div id="extra-secondshooter" class="extra-card p-4 rounded-lg cursor-pointer" onclick="toggleExtra('secondShooter')">
-                                <h3 class="font-bold">Segundo Fotógrafo</h3>
-                                <p class="text-sm text-secondary">Doble cobertura para no perder ningún detalle.</p>
-                                <p class="font-bold text-accent mt-2 price-tag"></p>
-                                <span class="extra-status text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full mt-2 inline-block"></span>
-                            </div>
-                            <div id="extra-photobook" class="extra-card p-4 rounded-lg cursor-pointer" onclick="toggleExtra('photobook')">
-                                <h3 class="font-bold">Photobook Impreso</h3>
-                                <p class="text-sm text-secondary">Tus recuerdos impresos en un libro de alta calidad.</p>
-                                <p class="font-bold text-accent mt-2 price-tag">$3,000 MXN</p>
-                                <span class="extra-status text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full mt-2 inline-block"></span>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-col sm:flex-row justify-between mt-8 gap-4">
-                             <button onclick="navigateTo(2)" class="btn-secondary font-bold py-3 px-8 rounded-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
-                                &larr; Atrás
-                            </button>
-                            <button onclick="generateFinalCut()" class="btn-primary font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 w-full sm:w-auto">
-                                Ver Versión Final &rarr;
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Section 4: Final Cut -->
-                    <div id="section-4" class="section">
-                        <div id="final-cut-content">
-                            <!-- Content will be generated by JS -->
-                        </div>
-                        
-                         <div class="text-center mt-6 flex flex-col items-center">
-                            <button onclick="downloadSummary()" class="btn-download font-bold py-3 px-8 rounded-lg shadow-lg transition-transform transform hover:scale-105 inline-flex items-center justify-center gap-2 w-full max-w-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
-                                Descargar Resumen
-                            </button>
-                            <button onclick="navigateTo(0)" class="font-bold text-secondary hover:text-accent mt-4 underline">
-                                Empezar de Nuevo
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </main>
+    <!-- Hero Section -->
+    <section id="hero" class="h-[60vh] w-screen flex flex-col justify-start items-center p-8 pt-40 text-center text-white">
+        <img src="https://res.cloudinary.com/drrhn6t1c/image/upload/v1752514553/logo-FE-fondonegro_bctsg7.png" alt="Logo Fotografía Esencial" class="w-64 fade-in">
+    </section>
+    
+    <div class="container mx-auto max-w-4xl -mt-20 relative z-10 bg-white rounded-t-2xl shadow-xl">
+        <!-- Intro Section -->
+        <section id="intro" class="px-8 pt-20 pb-10 text-center flex flex-col items-center">
+            <h1 class="text-4xl md:text-5xl font-bold">Crea la Historia de Tu Boda</h1>
+            <p class="text-lg text-text-light mt-4 max-w-2xl">Utiliza nuestra mesa de edición para diseñar el plan de fotografía perfecto para tu día especial. Comienza por contarnos un poco sobre ustedes.</p>
             
-            <!-- Summary Sidebar -->
-            <aside id="summary-panel" class="w-full lg:w-1/3">
-                <div class="main-container rounded-xl p-4 sm:p-6 sticky top-8">
-                    <h3 class="font-bold text-2xl border-b-2 border-accent pb-2 mb-4 tracking-tight">Resumen de Producción</h3>
-                    <div class="space-y-3">
-                        <div>
-                            <span class="font-bold text-secondary">Plan:</span>
-                            <span id="summary-package-name" class="float-right font-bold"></span>
-                        </div>
-                        <div>
-                            <span class="font-bold text-secondary">Horas:</span>
-                            <span id="summary-hours" class="float-right font-bold"></span>
-                        </div>
-                         <div>
-                            <span class="font-bold text-secondary">Fotos Estimadas:</span>
-                            <span id="summary-photos" class="float-right font-bold"></span>
-                        </div>
-                        <div id="summary-coverage-container" style="display: none;">
-                            <div class="border-t border-default my-2"></div>
-                             <h4 id="summary-coverage-title" class="font-bold text-secondary mb-1">Cobertura:</h4>
-                            <div id="summary-coverage-details" class="space-y-1">
-                                <!-- JS will populate this -->
-                            </div>
-                        </div>
-                        <div class="border-t border-default my-2"></div>
-                        <div class="text-2xl">
-                            <span class="font-bold text-secondary">Total:</span>
-                            <span id="summary-total" class="float-right font-bold text-accent"></span>
-                        </div>
-                    </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 w-full max-w-xl">
+                <input type="text" id="couple-names" placeholder="Nombres de la Pareja (Ej: Ana y Carlos)" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
+                <input type="date" id="wedding-date" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
+            </div>
+        </section>
+
+
+        <!-- Editor Section -->
+        <main id="editor" class="px-4 py-20">
+            
+            <!-- 1. Hours Selection -->
+            <section class="text-center mb-24">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Elige tu Cobertura</h2>
+                <p class="text-lg text-text-light max-w-3xl mx-auto mb-10">Selecciona el total de horas para tu cobertura. Esto definirá el ritmo y el alcance de la historia que contaremos juntos.</p>
+                <div id="hours-selection" class="flex justify-center flex-wrap gap-4">
+                    <!-- Buttons generated by JS -->
                 </div>
-            </aside>
+            </section>
+
+            <!-- 2. Timeline Distribution -->
+            <section class="text-center mb-24">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Construye tu Línea de Tiempo</h2>
+                <p class="text-lg text-text-light max-w-3xl mx-auto mb-10">Asigna las horas que seleccionaste a los momentos clave de tu boda. Tu historia toma forma aquí.</p>
+                <div id="coverage-warning" class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg relative mb-6" role="alert"></div>
+                <div class="relative timeline max-w-3xl mx-auto">
+                    <!-- Timeline items generated by JS -->
+                </div>
+            </section>
+
+            <!-- 3. Extras -->
+            <section class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4">Extras a Incluir</h2>
+                <p class="text-lg text-text-light max-w-3xl mx-auto mb-10">Añade elementos únicos para revivir tu boda.</p>
+                <div id="extras-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Extra cards generated by JS -->
+                </div>
+            </section>
+
+        </main>
+    </div>
+    
+    <!-- Floating Summary Bar -->
+    <footer class="sticky bottom-0 bg-white shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)] p-4 z-20">
+        <div class="container mx-auto flex justify-between items-center">
+            <div>
+                <p class="font-bold text-lg" id="summary-package-name">Elige tu plan</p>
+                <p class="text-sm text-text-light" id="summary-hours">0 Horas</p>
+            </div>
+            <div class="text-right">
+                <p class="text-2xl font-bold text-accent" id="summary-total">$0.00</p>
+                <button onclick="showSummaryModal()" class="text-sm font-semibold text-accent hover:underline">Ver Resumen Detallado</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Summary Modal -->
+    <div id="summary-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-4 z-50 hidden opacity-0" onclick="hideSummaryModal()">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+            <div id="summary-card" class="p-8 md:p-12">
+                <!-- Content generated by JS -->
+            </div>
+             <div class="px-8 md:px-12 pb-8 flex flex-col md:flex-row gap-4">
+                <button onclick="sendWhatsAppSummary()" class="w-full bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2">
+                    <img src="https://res.cloudinary.com/drrhn6t1c/image/upload/v1755994836/410199-PD37U2-851_povmt3.png" alt="WhatsApp Icon" class="w-6 h-6">
+                    Quiero este plan
+                </button>
+                <button onclick="hideSummaryModal()" class="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors">Cerrar</button>
+            </div>
         </div>
     </div>
+
 
     <script>
         const state = {
             coupleNames: '',
             weddingDate: '',
-            hours: 10,
+            hours: 0,
             extras: {
-                album: { selected: false, price: 1500, name: 'Álbum Digital', included: false },
-                postCredits: { selected: false, price: 2000, name: 'Escena Post-Créditos', included: false },
-                makeup: { selected: false, price: 2500, name: 'Maquillaje y Peinado', included: false },
-                saveTheDate: { selected: false, price: 3300, name: 'Sesión "Save the Date"', included: false },
-                extraPhotos: { selected: false, price: 1500, name: '50 Fotos Extras', included: false },
-                videographer: { selected: false, price: 0, name: 'Videógrafo', included: false },
-                secondShooter: { selected: false, pricePerHour: 350, name: 'Segundo Fotógrafo', included: false },
-                photobook: { selected: false, price: 3000, name: 'Photobook Impreso', included: false }
+                album: { name: 'Álbum Digital', price: 1500, selected: false, included: false },
+                postCredits: { name: 'Escena Post-Créditos', price: 2000, selected: false, included: false },
+                makeup: { name: 'Maquillaje y Peinado', price: 2500, selected: false, included: false },
+                saveTheDate: { name: 'Sesión "Save the Date"', price: 3300, selected: false, included: false },
+                extraPhotos: { name: '50 Fotos Extras', price: 1500, selected: false, included: false },
+                videographer: { name: 'Videógrafo', price: 0, selected: false, included: false },
+                secondShooter: { name: 'Segundo Fotógrafo', pricePerHour: 350, selected: false, included: false },
+                photobook: { name: 'Photobook Impreso', price: 3000, selected: false, included: false }
             },
             coverage: {
-                gettingReady: { value: 0, max: 2 },
-                ceremony: { value: 0, max: 1 },
-                session: { value: 0, max: 2 },
-                party: { value: 0, max: 6 }
-            },
-            previousHours: 0
-        };
-        
-        const coverageNames = {
-            gettingReady: 'Preparativos',
-            ceremony: 'Ceremonia',
-            session: 'Sesión de Novios',
-            party: 'Fiesta'
+                gettingReady: { name: 'Preparativos', value: 0, max: 2 },
+                ceremony: { name: 'Ceremonia', value: 0, max: 1 },
+                session: { name: 'Sesión de Novios', value: 0, max: 2 },
+                party: { name: 'Fiesta', value: 0, max: 6 }
+            }
         };
 
+        const availableHours = [10, 8, 6, 4, 2];
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            buildHourButtons();
+            buildTimeline();
+            buildExtras();
+            updateAllUI();
+        });
+
+        function buildHourButtons() {
+            const container = document.getElementById('hours-selection');
+            container.innerHTML = availableHours.map(h => `
+                <button class="hour-btn font-bold py-3 px-8 rounded-lg" onclick="selectHours(${h})">
+                    ${h} Horas
+                </button>
+            `).join('');
+        }
+
+        function buildTimeline() {
+            const container = document.querySelector('.timeline');
+            const isDisabled = state.hours === 0;
+            container.innerHTML = Object.keys(state.coverage).map((key, index) => {
+                const item = state.coverage[key];
+                const margin = index % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto';
+                const recommendationText = item.max === 1 
+                    ? `(Recomendado: ${item.max}hr)` 
+                    : `(Recomendado: 1-${item.max}hr)`;
+
+                return `
+                <div class="timeline-item relative md:w-1/2 ${margin} mb-10">
+                    <div class="bg-bg-main p-6 rounded-lg shadow-md border border-gray-100">
+                        <h3 class="text-xl font-bold mb-2">${item.name}</h3>
+                        <p class="text-sm text-text-light mb-4">${recommendationText}</p>
+                        <div class="flex items-center justify-center gap-4">
+                            <button class="text-2xl text-gray-400 hover:text-accent disabled:opacity-50" onclick="changeCoverage('${key}', -1)" ${isDisabled || item.value === 0 ? 'disabled' : ''}>−</button>
+                            <span class="text-3xl font-bold w-12 text-center">${item.value}</span>
+                            <button class="text-2xl text-gray-400 hover:text-accent disabled:opacity-50" onclick="changeCoverage('${key}', 1)" ${isDisabled || item.value === item.max ? 'disabled' : ''}>+</button>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function buildExtras() {
+            const container = document.getElementById('extras-container');
+            container.innerHTML = Object.keys(state.extras).map(key => {
+                const extra = state.extras[key];
+                let priceText = (extra.price > 0 || extra.pricePerHour > 0) 
+                    ? `<p class="font-semibold text-accent mt-2 price-tag"></p>` 
+                    : '';
+                
+                return `
+                <div id="extra-${key}" class="extra-card p-5 rounded-xl cursor-pointer text-center relative" onclick="toggleExtra('${key}')">
+                     <span class="extra-status hidden absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
+                    <h4 class="font-bold text-lg">${extra.name}</h4>
+                    ${priceText}
+                </div>
+                `;
+            }).join('');
+        }
+        
+        // --- STATE & UI UPDATES ---
+        function selectHours(h) {
+            state.hours = h;
+            Object.keys(state.coverage).forEach(key => state.coverage[key].value = 0);
+            
+            updatePackageInclusions();
+            
+            Object.values(state.extras).forEach(extra => {
+                extra.selected = extra.included;
+            });
+
+            updateAllUI();
+        }
+        
+        function updatePackageInclusions() {
+             Object.values(state.extras).forEach(extra => extra.included = false);
+             if (state.hours === 8) {
+                state.extras.album.included = true;
+             } else if (state.hours === 10) {
+                state.extras.album.included = true;
+                state.extras.postCredits.included = true;
+             }
+        }
+
+        function changeCoverage(key, delta) {
+            if (state.hours === 0) return;
+            const item = state.coverage[key];
+            const assigned = Object.values(state.coverage).reduce((sum, cv) => sum + cv.value, 0);
+            
+            if (delta > 0 && assigned < state.hours && item.value < item.max) {
+                item.value += delta;
+            } else if (delta < 0 && item.value > 0) {
+                item.value += delta;
+            }
+            updateAllUI();
+        }
+        
+        function toggleExtra(key) {
+            state.extras[key].selected = !state.extras[key].selected;
+            updateAllUI();
+        }
+        
+        function updateAllUI() {
+            const total = calculateTotal();
+            
+            document.querySelectorAll('#hours-selection .hour-btn').forEach(btn => {
+                btn.classList.toggle('selected', parseInt(btn.textContent) === state.hours);
+            });
+
+            buildTimeline();
+            updateCoverageWarning();
+
+            Object.keys(state.extras).forEach(key => {
+                const extra = state.extras[key];
+                const card = document.getElementById(`extra-${key}`);
+                const status = card.querySelector('.extra-status');
+                const priceTag = card.querySelector('.price-tag');
+
+                if (priceTag) {
+                    let displayPrice = 0;
+                    if (extra.pricePerHour > 0) {
+                        displayPrice = extra.pricePerHour * state.hours;
+                    } else {
+                        displayPrice = extra.price;
+                    }
+
+                    if (displayPrice > 0) {
+                        priceTag.textContent = formatCurrency(displayPrice);
+                        priceTag.style.display = 'block';
+                    } else {
+                        priceTag.style.display = 'none';
+                    }
+                }
+                
+                card.classList.remove('selected', 'included');
+                card.style.opacity = '1';
+                status.textContent = '';
+                status.classList.add('hidden');
+                
+                if (extra.included) {
+                    card.classList.add('included');
+                    if(extra.selected) {
+                        status.textContent = 'Incluido';
+                        status.classList.remove('hidden');
+                    } else {
+                       card.style.opacity = '0.6';
+                    }
+                } else if (extra.selected) {
+                    card.classList.add('selected');
+                    status.textContent = 'Seleccionado';
+                    status.classList.remove('hidden');
+                }
+            });
+
+            document.getElementById('summary-package-name').textContent = getPackageName(state.hours);
+            document.getElementById('summary-hours').textContent = `${state.hours} Horas`;
+            document.getElementById('summary-total').textContent = formatCurrency(total);
+        }
+        
+        function updateCoverageWarning() {
+            const assigned = Object.values(state.coverage).reduce((sum, item) => sum + item.value, 0);
+            const warningEl = document.getElementById('coverage-warning');
+            
+            if (state.hours === 0) {
+                warningEl.textContent = 'Por favor, elige una cobertura de horas para empezar a construir tu línea de tiempo.';
+                warningEl.className = 'bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded-lg relative mb-6';
+                return;
+            }
+
+            if (assigned > state.hours) {
+                warningEl.textContent = `¡Atención! Has asignado ${assigned} horas, pero tu plan solo cubre ${state.hours}.`;
+                warningEl.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative mb-6';
+            } else if (assigned < state.hours) {
+                 warningEl.textContent = `Aún te quedan ${state.hours - assigned} horas por distribuir.`;
+                 warningEl.className = 'bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded-lg relative mb-6';
+            } else {
+                 warningEl.textContent = `¡Perfecto! Has asignado todas tus horas.`;
+                 warningEl.className = 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded-lg relative mb-6';
+            }
+        }
+
+        // --- CALCULATIONS ---
         const formatCurrency = (value) => value.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
         
         const getPackageName = (h) => {
+            if (h === 0) return 'Elige tu plan';
             if (h < 8) return 'Plan Piloto';
             if (h === 8) return 'Plan Secuela';
             if (h === 10) return 'Plan Trilogía';
-            return 'Plan Personalizado'; // Fallback
+            return 'Plan Personalizado';
         };
 
-        const getPhotoEstimate = (h) => {
-            if (h === 2) return '80-130 fotos';
-            if (h === 4) return '200-230 fotos';
-            if (h === 6) return '250-300 fotos';
-            if (h === 8) return '300-400 fotos';
-            if (h === 10) return '500-600 fotos';
-            return '';
-        };
+        const getBasePrice = (h) => {
+            const prices = { 10: 29990, 8: 19990, 6: 16990, 4: 8890, 2: 4490 };
+            return prices[h] || 0;
+        }
         
         function calculateTotal() {
-            let basePrice = 0;
-            if (state.hours === 10) basePrice = 29990;
-            else if (state.hours === 8) basePrice = 19990;
-            else if (state.hours === 6) basePrice = 16990;
-            else if (state.hours === 4) basePrice = 8890;
-            else if (state.hours === 2) basePrice = 4490;
-
-            let extrasAdjustment = 0;
-            for (const key in state.extras) {
+            let total = getBasePrice(state.hours);
+            Object.keys(state.extras).forEach(key => {
                 const extra = state.extras[key];
-                const dynamicPrice = extra.pricePerHour ? state.hours * extra.pricePerHour : extra.price;
+                const dynamicPrice = extra.pricePerHour ? extra.pricePerHour * state.hours : extra.price;
 
-                if (extra.included && !extra.selected) {
-                    extrasAdjustment -= dynamicPrice;
-                } else if (!extra.included && extra.selected) {
-                    extrasAdjustment += dynamicPrice;
+                if (extra.selected && !extra.included) {
+                    total += dynamicPrice;
+                } else if (!extra.selected && extra.included) {
+                    total -= dynamicPrice;
                 }
-            }
-            return basePrice + extrasAdjustment;
-        }
-
-        function updateAll() {
-            const sliderValue = parseInt(document.getElementById('hours-slider').value);
-            state.hours = 12 - sliderValue;
-            
-            Object.values(state.extras).forEach(extra => extra.included = false);
-
-            if (state.hours === 8) {
-                state.extras.album.included = true;
-            } else if (state.hours === 10) {
-                state.extras.album.included = true;
-                state.extras.postCredits.included = true;
-            }
-            
-            if (state.hours !== state.previousHours) {
-                 Object.values(state.extras).forEach(extra => {
-                    extra.selected = extra.included;
-                });
-            } else if (state.previousHours === 0) { // Fix for initial load
-                Object.values(state.extras).forEach(extra => {
-                    extra.selected = extra.included;
-                });
-            }
-            state.previousHours = state.hours;
-
-            const total = calculateTotal();
-
-            document.getElementById('summary-package-name').textContent = getPackageName(state.hours);
-            document.getElementById('hours-value').textContent = state.hours;
-            document.getElementById('summary-hours').textContent = state.hours;
-            document.getElementById('summary-photos').textContent = getPhotoEstimate(state.hours);
-            document.getElementById('summary-total').textContent = formatCurrency(total);
-            
-            updateExtrasUI();
-            updateCoverageUI();
-        }
-
-        function updateExtrasUI() {
-            for (const key in state.extras) {
-                const extra = state.extras[key];
-                const card = document.getElementById(`extra-${key.toLowerCase()}`);
-                if (!card) continue;
-                const statusEl = card.querySelector('.extra-status');
-                const priceTag = card.querySelector('.price-tag');
-
-                card.classList.remove('selected', 'included');
-                card.style.opacity = '1';
-                statusEl.className = 'extra-status text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-full mt-2 inline-block';
-                
-                if (priceTag) {
-                    if (extra.included) {
-                        priceTag.style.display = 'none';
-                    } else {
-                         priceTag.style.display = 'block';
-                         if (extra.pricePerHour) {
-                            const dynamicPrice = state.hours * extra.pricePerHour;
-                            priceTag.textContent = formatCurrency(dynamicPrice);
-                         } else if (extra.price > 0) {
-                            priceTag.textContent = formatCurrency(extra.price);
-                         } else {
-                            priceTag.style.display = 'none';
-                         }
-                    }
-                }
-
-                if (extra.included) {
-                    card.classList.add('included');
-                    statusEl.classList.add('included');
-                    statusEl.textContent = 'Incluido';
-                    if (!extra.selected) {
-                        card.style.opacity = '0.6';
-                    }
-                } else {
-                    if (extra.selected) {
-                        card.classList.add('selected');
-                        statusEl.classList.add('selected');
-                        statusEl.textContent = 'Seleccionado';
-                    } else {
-                        statusEl.textContent = '';
-                    }
-                }
-            }
+            });
+            return total;
         }
         
-        function updateCoverageUI() {
-            const totalAssigned = Object.values(state.coverage).reduce((sum, item) => sum + item.value, 0);
-            document.getElementById('coverage-total-hours').textContent = totalAssigned;
-            document.getElementById('coverage-max-hours').textContent = state.hours;
-            
-            const warningEl = document.getElementById('coverage-warning');
-            const nextBtn = document.getElementById('coverage-next-btn');
-            let warningText = '';
-
-            if (totalAssigned > state.hours) {
-                warningText = `Has asignado más horas de las contratadas (${totalAssigned} de ${state.hours}).`;
-            } else if (totalAssigned < state.hours) {
-                warningText = `Debes distribuir exactamente las ${state.hours} horas contratadas. Has asignado ${totalAssigned}.`;
+        // --- SUMMARY MODAL & WHATSAPP ---
+        function showSummaryModal() {
+            if (state.hours === 0) {
+                alert("Por favor, selecciona un plan de horas antes de ver el resumen.");
+                return;
             }
-
-            if (warningText) {
-                warningEl.textContent = warningText;
-                warningEl.classList.remove('hidden');
-                nextBtn.disabled = true;
-                nextBtn.classList.add('opacity-50', 'cursor-not-allowed');
-            } else {
-                warningEl.classList.add('hidden');
-                nextBtn.disabled = false;
-                nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
-            }
-            updateSummaryCoverage();
+            generateSummaryContent();
+            const modal = document.getElementById('summary-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
 
-        function updateSummaryCoverage() {
-            const container = document.getElementById('summary-coverage-details');
-            const containerWrapper = document.getElementById('summary-coverage-container');
-            container.innerHTML = '';
-            let hasCoverage = false;
-            for (const key in state.coverage) {
-                const item = state.coverage[key];
-                if (item.value > 0) {
-                    hasCoverage = true;
-                    const name = coverageNames[key];
-                    const detailHtml = `<div class="flex justify-between text-sm"><span class="text-secondary">${name}</span><span class="font-semibold">${item.value}h</span></div>`;
-                    container.innerHTML += detailHtml;
-                }
-            }
-            containerWrapper.style.display = hasCoverage ? 'block' : 'none';
+        function hideSummaryModal() {
+            const modal = document.getElementById('summary-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
         }
 
-        function toggleExtra(key) {
-            state.extras[key].selected = !state.extras[key].selected;
-            updateAll();
-        }
-        
-        function navigateTo(sectionNumber) {
-            if (sectionNumber === 1) { // Moving from step 0 to 1
-                state.coupleNames = document.getElementById('couple-names').value;
-                state.weddingDate = document.getElementById('wedding-date').value;
-            }
+        function generateSummaryContent() {
+            const container = document.getElementById('summary-card');
+            state.coupleNames = document.getElementById('couple-names').value;
+            state.weddingDate = document.getElementById('wedding-date').value;
 
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.getElementById(`section-${sectionNumber}`).classList.add('active');
-            
-            const mainHeader = document.getElementById('main-header');
-            const summaryPanel = document.getElementById('summary-panel');
-            const layoutWrapper = document.getElementById('layout-wrapper');
-            const mainContentArea = document.getElementById('main-content-area');
-
-            // Reset layout classes
-            layoutWrapper.classList.remove('justify-center', 'items-center');
-            mainContentArea.classList.remove('lg:w-full', 'max-w-2xl', 'mx-auto');
-            mainContentArea.classList.add('lg:w-2/3');
-
-            if(sectionNumber === 0 || sectionNumber === 4) {
-                if(mainHeader) mainHeader.style.display = 'none';
-                if(summaryPanel) summaryPanel.style.display = 'none';
-                layoutWrapper.classList.add('justify-center', 'items-center');
-                mainContentArea.classList.remove('lg:w-2/3');
-                mainContentArea.classList.add('lg:w-full', 'max-w-2xl', 'mx-auto');
-            } else {
-                if(mainHeader) mainHeader.style.display = 'block';
-                if(summaryPanel) summaryPanel.style.display = 'block';
-            }
-            
-            if (sectionNumber === 0) {
-                document.getElementById('couple-names').value = state.coupleNames;
-                document.getElementById('wedding-date').value = state.weddingDate;
-            }
-        }
-
-        function generateFinalCut() {
-            navigateTo(4);
-            const contentEl = document.getElementById('final-cut-content');
-            
-            const total = calculateTotal();
-            
-            let extrasHtml = '';
-            for (const key in state.extras) {
-                if(state.extras[key].selected) {
-                    const extra = state.extras[key];
-                    let priceText = '';
-                    if (extra.included) {
-                        priceText = '<span class="text-blue-500 font-semibold">Incluido</span>';
-                    } else if (extra.pricePerHour) {
-                        const dynamicPrice = state.hours * extra.pricePerHour;
-                        priceText = `<span class="font-semibold">${formatCurrency(dynamicPrice)}</span>`;
-                    } else if (extra.price > 0) {
-                        priceText = `<span class="font-semibold">${formatCurrency(extra.price)}</span>`;
-                    }
-                    extrasHtml += `<div class="flex justify-between items-center text-sm"><p class="text-secondary">${extra.name}</p>${priceText}</div>`;
-                }
-            }
-            if (!extrasHtml) extrasHtml = '<p class="text-secondary text-sm">Ningún extra seleccionado.</p>';
-
-            let coverageHtml = '';
-            for(const key in state.coverage) {
-                const hours = state.coverage[key].value;
-                if (hours > 0) {
-                    const name = coverageNames[key] || key;
-                    coverageHtml += `<div class="flex justify-between items-center text-sm"><p class="text-secondary">${name}</p><p class="font-semibold">${hours} hr${hours > 1 ? 's' : ''}</p></div>`;
-                }
-            }
-            if (!coverageHtml) coverageHtml = '<p class="text-secondary text-sm">Sin distribución de horas asignada.</p>';
-            
-            let dateFormatted = 'Sin fecha';
+            let dateFormatted = 'Fecha por confirmar';
             if (state.weddingDate) {
                 const date = new Date(state.weddingDate + 'T12:00:00');
                 dateFormatted = date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
             }
 
-            contentEl.innerHTML = `
-                <div id="final-summary-card" class="p-6 sm:p-8 space-y-6 shadow-xl border border-default rounded-xl">
-                    <div class="text-center">
-                        <img src="https://res.cloudinary.com/drrhn6t1c/image/upload/v1752514553/logo-FE-fondoblanco_c8tlxc.png" alt="Logo" class="mx-auto w-40 h-auto mb-4" crossorigin="anonymous">
-                        <h3 class="font-bold text-3xl text-accent tracking-tight">${getPackageName(state.hours)}</h3>
-                        <p class="text-secondary font-semibold mt-2">${state.coupleNames || 'La Boda de'}</p>
-                        <p class="text-secondary text-sm">${dateFormatted}</p>
-                    </div>
-                    <div class="border-t border-default"></div>
-                    <div class="space-y-3">
-                        <div class="flex justify-between font-semibold"><p>Cobertura Total:</p><p>${state.hours} Horas</p></div>
-                        <div class="flex justify-between font-semibold"><p>Fotos Estimadas:</p><p>${getPhotoEstimate(state.hours)}</p></div>
-                    </div>
-                    <div class="border-t border-default"></div>
+            const total = calculateTotal();
+            
+            const coverageItems = Object.keys(state.coverage)
+                .filter(key => state.coverage[key].value > 0)
+                .map(key => `<li class="flex justify-between"><span>${state.coverage[key].name}</span><span class="font-medium">${state.coverage[key].value}h</span></li>`)
+                .join('');
+            
+            const extrasItems = Object.keys(state.extras)
+                .filter(key => state.extras[key].selected)
+                .map(key => {
+                    const extra = state.extras[key];
+                    let priceHtml = '';
+                    if (extra.included && extra.selected) {
+                        priceHtml = `<span class="font-medium text-accent">Incluido</span>`;
+                    } else if (extra.pricePerHour) {
+                        priceHtml = `<span class="font-medium">${formatCurrency(extra.pricePerHour * state.hours)}</span>`;
+                    } else if (extra.price > 0) {
+                        priceHtml = `<span class="font-medium">${formatCurrency(extra.price)}</span>`;
+                    }
+                    return `<li class="flex justify-between"><span>${extra.name}</span>${priceHtml}</li>`;
+                })
+                .join('');
+
+            container.innerHTML = `
+                <div class="text-center mb-8">
+                    <img src="https://res.cloudinary.com/drrhn6t1c/image/upload/v1752514553/logo-FE-fondoblanco_c8tlxc.png" alt="Logo" class="mx-auto w-40 h-auto mb-4" crossorigin="anonymous">
+                    <h2 class="text-4xl font-bold">${getPackageName(state.hours)}</h2>
+                    <p class="text-lg text-text-light mt-2">${state.coupleNames || 'La Boda de'}</p>
+                    <p class="text-md text-text-light">${dateFormatted}</p>
+                </div>
+                
+                <div class="border-t border-gray-200 pt-6 space-y-6 text-text-light">
                     <div>
-                        <h4 class="font-bold text-lg text-accent mb-2">Escenas a Filmar</h4>
-                        <div class="space-y-1">${coverageHtml}</div>
+                        <h3 class="font-bold text-lg text-text-dark mb-3">Resumen de Cobertura</h3>
+                        <ul class="space-y-2">
+                            <li class="flex justify-between text-lg">
+                                <span class="font-semibold text-text-dark">Total de Horas</span>
+                                <span class="font-bold text-accent">${state.hours}</span>
+                            </li>
+                           ${coverageItems}
+                        </ul>
                     </div>
-                    <div class="border-t border-default"></div>
-                    <div>
-                        <h4 class="font-bold text-lg text-accent mb-2">Extras de Producción</h4>
-                        <div class="space-y-1">${extrasHtml}</div>
+                     <div>
+                        <h3 class="font-bold text-lg text-text-dark mb-3">Extras a Incluir</h3>
+                        <ul class="space-y-2">${extrasItems || '<li>Ninguno</li>'}</ul>
                     </div>
-                    <div class="border-t border-default"></div>
                     <div>
-                        <h4 class="font-bold text-lg text-accent mb-2">Notas</h4>
-                        <div class="text-sm text-secondary space-y-1">
-                            <p class="font-semibold">Al contratar obtienes los siguientes beneficios:</p>
+                        <h3 class="font-bold text-lg text-text-dark mb-3">NOTA</h3>
+                        <div class="text-sm">
+                            <p>Al contratar obtienes los siguientes beneficios:</p>
                             <ul class="list-disc list-inside pl-2">
-                                <li>10% de descuento en servicio de florería.</li>
-                                <li>10% de descuento en servicio de invitaciones.</li>
+                                <li>15% de descuento en servicio de florería</li>
+                                <li>15% de descuento en servicio de invitaciones</li>
                             </ul>
                         </div>
                     </div>
-                    <div class="border-t-2 border-accent pt-4 mt-4">
-                        <div class="flex justify-between items-center text-2xl">
-                            <p class="font-bold tracking-tight">PRECIO FINAL:</p>
-                            <p class="font-extrabold text-accent">${formatCurrency(total)}</p>
-                        </div>
+                </div>
+
+                <div class="border-t-2 border-accent mt-8 pt-6">
+                    <div class="flex justify-between items-center text-3xl">
+                        <p class="font-bold">TOTAL:</p>
+                        <p class="font-bold text-accent">${formatCurrency(total)}</p>
                     </div>
-                </div>`;
+                </div>
+            `;
         }
         
-        function handleCoverageChange(scene, action) {
-            let currentValue = state.coverage[scene].value;
-            const maxValue = state.coverage[scene].max;
-            const totalAssigned = Object.values(state.coverage).reduce((sum, item) => sum + item.value, 0);
+        function sendWhatsAppSummary() {
+            const phoneNumber = "526643372791"; // Reemplaza con tu número de WhatsApp
+            let message = `¡Hola, Saúl! Estoy interesado/a en este plan de fotografía para mi boda.\n\n`;
+            message += `*Detalles del Paquete:*\n`;
+            message += `-------------------------\n`;
+            message += `*Nombres:* ${state.coupleNames || 'No especificado'}\n`;
+            message += `*Fecha:* ${state.weddingDate || 'No especificada'}\n\n`;
+            message += `*Plan:* ${getPackageName(state.hours)}\n`;
+            message += `*Cobertura:* ${state.hours} Horas\n`;
+            message += `*Precio Total:* ${formatCurrency(calculateTotal())}\n\n`;
 
-            if (action === 'plus' && currentValue < maxValue && totalAssigned < state.hours) {
-                state.coverage[scene].value++;
-            } else if (action === 'minus' && currentValue > 0) {
-                state.coverage[scene].value--;
+            const coverageItems = Object.keys(state.coverage)
+                .filter(key => state.coverage[key].value > 0)
+                .map(key => `- ${state.coverage[key].name}: ${state.coverage[key].value}h`)
+                .join('\n');
+            
+            if(coverageItems) {
+                message += `*Distribución de Horas:*\n${coverageItems}\n\n`;
+            }
+
+            const extrasItems = Object.keys(state.extras)
+                .filter(key => state.extras[key].selected)
+                .map(key => `- ${state.extras[key].name}`)
+                .join('\n');
+
+            if(extrasItems) {
+                message += `*Extras Incluidos:*\n${extrasItems}\n\n`;
             }
             
-            document.querySelector(`.coverage-value[data-scene="${scene}"]`).textContent = state.coverage[scene].value;
-            updateCoverageUI();
+            message += `¡Espero tu respuesta!`;
+
+            const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
         }
 
-        function buildCoverageInputs() {
-            const container = document.getElementById('coverage-container');
-            container.innerHTML = '';
-            for (const key in state.coverage) {
-                const item = state.coverage[key];
-                const name = coverageNames[key];
-                const cardHtml = `
-                    <div class="scene-card p-4 rounded-lg transition-all flex flex-col items-center">
-                        <h3 class="font-bold">${name}</h3>
-                        <p class="text-sm text-secondary mb-2">(Max: ${item.max}h)</p>
-                        <div class="flex items-center justify-center gap-3 mt-auto">
-                            <button class="coverage-btn" onclick="handleCoverageChange('${key}', 'minus')">-</button>
-                            <span class="coverage-value" data-scene="${key}">${item.value}</span>
-                            <button class="coverage-btn" onclick="handleCoverageChange('${key}', 'plus')">+</button>
-                        </div>
-                    </div>
-                `;
-                container.innerHTML += cardHtml;
-            }
-        }
-
-        function downloadSummary() {
-            const summaryNode = document.getElementById('final-summary-card');
-            if (summaryNode) {
-                 html2canvas(summaryNode, { 
-                    scale: 2, 
-                    useCORS: true,
-                    backgroundColor: 'var(--container-bg)'
-                }).then(canvas => {
-                    const imageURL = canvas.toDataURL('image/png');
-                    const downloadLink = document.createElement('a');
-                    downloadLink.href = imageURL;
-                    downloadLink.download = 'resumen-paquete-boda.png';
-                    document.body.appendChild(downloadLink);
-                    downloadLink.click();
-                    document.body.removeChild(downloadLink);
-                });
-            }
-        }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('hours-slider').addEventListener('input', updateAll);
-            buildCoverageInputs();
-            navigateTo(0);
-            updateAll();
-        });
     </script>
 </body>
 </html>
+
+
+
 
