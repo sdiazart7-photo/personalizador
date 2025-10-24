@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personaliza tu plan</title>
+    <title>Personalizador - Finite Estudio</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        @font-face {
-            font-family: 'The Seasons';
-            src: url('https://res.cloudinary.com/drrhn6t1c/raw/upload/v1755826797/Fontspring-DEMO-theseasons-lt_wuifpf.otf') format('opentype');
-        }
+        /* Keep Glacial Indifference */
         @font-face {
             font-family: 'Glacial Indifference';
             src: url('https://res.cloudinary.com/drrhn6t1c/raw/upload/v1755827417/GlacialIndifference-Regular_z5pngu.otf') format('opentype');
@@ -36,8 +36,9 @@
             color: var(--text-dark);
         }
 
+        /* Use Playfair Display for Titles */
         h1, h2, h3 {
-            font-family: 'The Seasons', serif;
+            font-family: 'Playfair Display', serif;
             text-transform: uppercase;
         }
 
@@ -45,7 +46,7 @@
         .bg-accent { background-color: var(--accent); }
         .border-accent { border-color: var(--accent); }
         .bg-accent-light { background-color: var(--accent-light); }
-        
+
         #hero {
             background-image: url('https://res.cloudinary.com/drrhn6t1c/image/upload/v1755893180/a_r_-_web_28_eram4m.jpg');
             background-size: cover;
@@ -90,6 +91,7 @@
             background-color: var(--accent-light);
         }
 
+        /* Timeline line only for medium screens and up */
         .timeline::before {
             content: '';
             position: absolute;
@@ -100,12 +102,41 @@
             height: 100%;
             background-color: var(--border-color);
             z-index: 0;
+            display: none; /* Hidden by default */
+        }
+        @media (min-width: 768px) { /* md breakpoint */
+             .timeline::before {
+                display: block;
+            }
         }
         .timeline-item {
             z-index: 1;
         }
-        
-        #summary-modal {
+
+        .timeline-button {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem; /* Increased size */
+            line-height: 1;
+            background-color: #f3f4f6; /* Light gray background */
+            color: var(--text-light);
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .timeline-button:not(:disabled):hover {
+            background-color: var(--accent-light);
+            color: var(--accent);
+        }
+        .timeline-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+
+        #summary-modal, #intro-modal, #video-modal {
             transition: opacity 0.3s ease;
         }
 
@@ -113,17 +144,56 @@
             animation: fadeIn 1s ease-out forwards;
             opacity: 0;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .extra-status {
             font-size: 0.7rem;
             line-height: 1;
             background-color: var(--accent);
             color: white;
+        }
+
+        /* Estilo para el Tooltip */
+        .extra-tooltip {
+            position: absolute;
+            bottom: 105%; /* Justo arriba de la tarjeta */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--text-dark);
+            color: var(--bg-main);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem; /* 12px */
+            font-family: 'Glacial Indifference', sans-serif;
+            white-space: nowrap;
+            z-index: 10;
+            transition: opacity 0.3s ease;
+            pointer-events: none; /* Para que no bloquee el hover */
+            opacity: 0;
+        }
+        .group:hover .extra-tooltip {
+            opacity: 1;
+        }
+
+        input[type="checkbox"] {
+            accent-color: var(--accent);
+        }
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield; /* Firefox */
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
     </style>
 </head>
@@ -133,27 +203,15 @@
     <section id="hero" class="h-[60vh] w-screen flex flex-col justify-start items-center p-8 pt-40 text-center text-white">
         <img src="https://res.cloudinary.com/drrhn6t1c/image/upload/v1752514553/logo-FE-fondonegro_bctsg7.png" alt="Logo Fotografía Esencial" class="w-64 fade-in">
     </section>
-    
+
     <div class="container mx-auto max-w-4xl -mt-20 relative z-10 bg-white rounded-t-2xl shadow-xl">
-        <!-- Intro Section -->
-        <section id="intro" class="px-8 pt-20 pb-10 text-center flex flex-col items-center">
-            <h1 class="text-4xl md:text-5xl font-bold">Crea la Historia de Tu Boda</h1>
-            <p class="text-lg text-text-light mt-4 max-w-2xl">Utiliza nuestra mesa de edición para diseñar el plan de fotografía perfecto para tu día especial. Comienza por contarnos un poco sobre ustedes.</p>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8 w-full max-w-xl">
-                <input type="text" id="couple-names" placeholder="Nombres de la Pareja (Ej: Ana y Carlos)" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
-                <input type="date" id="wedding-date" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
-            </div>
-        </section>
-
-
         <!-- Editor Section -->
         <main id="editor" class="px-4 py-20">
-            
+
             <!-- 1. Hours Selection -->
             <section class="text-center mb-24">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Elige tu Cobertura</h2>
-                <p class="text-lg text-text-light max-w-3xl mx-auto mb-10">Selecciona el total de horas para tu cobertura. Esto definirá el ritmo y el alcance de la historia que contaremos juntos.</p>
+                <p class="text-lg text-text-light max-w-3xl mx-auto mb-10">Selecciona el total de horas para tu cobertura fotográfica. Esto definirá el ritmo y el alcance de la historia que contaremos juntos.</p>
                 <div id="hours-selection" class="flex justify-center flex-wrap gap-4">
                     <!-- Buttons generated by JS -->
                 </div>
@@ -162,8 +220,9 @@
             <!-- 2. Timeline Distribution -->
             <section class="text-center mb-24">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4">Construye tu Línea de Tiempo</h2>
-                <p class="text-lg text-text-light max-w-3xl mx-auto mb-10">Asigna las horas que seleccionaste a los momentos clave de tu boda. Tu historia toma forma aquí.</p>
+                <p class="text-lg text-text-light max-w-3xl mx-auto mb-10">Asigna las horas de fotografía que seleccionaste a los momentos clave de tu boda. Tu historia toma forma aquí.</p>
                 <div id="coverage-warning" class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded-lg relative mb-6" role="alert"></div>
+                <!-- On mobile, items will stack. On md+, the line appears and items alternate -->
                 <div class="relative timeline max-w-3xl mx-auto">
                     <!-- Timeline items generated by JS -->
                 </div>
@@ -180,24 +239,99 @@
 
         </main>
     </div>
-    
+
     <!-- Floating Summary Bar -->
-    <footer class="sticky bottom-0 bg-white shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)] p-4 z-20">
-        <div class="container mx-auto flex justify-between items-center">
-            <div>
+    <footer id="floating-summary-bar" class="sticky bottom-0 bg-white shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)] p-4 z-20">
+        <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
+            <div class="w-full sm:w-auto sm:flex-1 mb-2 sm:mb-0">
                 <p class="font-bold text-lg" id="summary-package-name">Elige tu plan</p>
-                <div class="flex items-center gap-2 text-sm text-text-light">
+                <div class="flex items-center justify-center sm:justify-start gap-2 text-sm text-text-light">
                      <span id="summary-hours">0 Horas</span>
                      <span id="summary-photos-divider" class="hidden">|</span>
                      <span id="summary-photos"></span>
                 </div>
             </div>
-            <div class="text-right">
+             <div class="w-full sm:w-auto sm:flex-none mb-2 sm:mb-0 sm:mx-4">
+                 <button id="show-summary-btn" onclick="showSummaryModal()" class="bg-accent text-white font-bold py-2 px-6 rounded-lg shadow-md hover:shadow-lg transition-shadow disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base w-full sm:w-auto" disabled>
+                    Ver Resumen
+                </button>
+            </div>
+            <div class="w-full sm:w-auto sm:flex-1 text-center sm:text-right">
                 <p class="text-2xl font-bold text-accent" id="summary-total">$0.00</p>
-                <button onclick="showSummaryModal()" class="text-sm font-semibold text-accent hover:underline">Ver Resumen Detallado</button>
             </div>
         </div>
     </footer>
+
+    <!-- Intro Modal -->
+    <div id="intro-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-4 z-50 opacity-0 transition-opacity duration-300">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-8 text-center" onclick="event.stopPropagation()">
+            <img src="https://res.cloudinary.com/drrhn6t1c/image/upload/v1752514553/logo-FE-fondoblanco_c8tlxc.png" alt="Logo Fotografía Esencial" class="mx-auto w-40 h-auto mb-6">
+            <h1 class="text-2xl md:text-3xl font-bold mb-2">¡Bienvenido/a!</h1>
+            <p class="text-md text-text-light mb-6">Antes de empezar, cuéntanos un poco sobre ustedes.</p>
+
+            <div class="grid grid-cols-1 gap-4 mt-8 w-full">
+                <input type="text" id="couple-names-modal" placeholder="Nombres de la Pareja (Ej: Ana y Carlos)" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
+                <input type="date" id="wedding-date-modal" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
+            </div>
+
+            <p id="modal-warning" class="text-red-500 text-sm mt-4 hidden">Por favor, completa ambos campos.</p>
+
+            <button onclick="submitIntroData()" class="mt-8 bg-accent text-white font-bold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:scale-105 w-full">
+                Continuar
+            </button>
+        </div>
+    </div>
+
+    <!-- Video Modal -->
+    <div id="video-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-4 z-50 hidden opacity-0 transition-opacity duration-300" onclick="hideVideoModal()">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm sm:max-w-lg w-full max-h-[85vh] flex flex-col" onclick="event.stopPropagation()">
+             <div class="p-6 border-b border-gray-200 text-center sticky top-0 bg-white rounded-t-2xl">
+                 <h2 class="text-2xl font-bold">Servicio de Video Profesional</h2>
+             </div>
+             <div class="p-8 overflow-y-auto">
+                 <p class="text-md text-text-light mb-4 text-center">Para el servicio de video, trabajo con un colega videógrafo especialista para garantizar un resultado 100% profesional y a la medida de tu boda.</p>
+                <p class="text-md text-text-light mb-6 text-center">Por favor, indícame qué es lo que más o menos buscas. Con esa información, yo cotizaré directamente con mi colega para darte un precio exacto y no uno "al azar".</p>
+
+                 <div class="mb-6 text-center">
+                     <label class="block text-md font-semibold mb-2">¿Cuántas horas de cobertura de video te gustaría cotizar?</label>
+                     <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                        <input type="number" id="video-hours" min="2" max="10" step="2" placeholder="Horas" class="p-3 w-20 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center disabled:opacity-50">
+                         <label class="flex items-center gap-2 cursor-pointer text-sm sm:text-base">
+                            <input type="checkbox" id="video-same-hours" class="w-4 h-4" checked onchange="toggleVideoHoursInput()">
+                            <span>Mismas horas que fotografía</span>
+                        </label>
+                     </div>
+                </div>
+
+                <p class="text-md text-text-light mb-4 text-center font-semibold">¿Qué entregables te gustaría que coticemos?</p>
+                <div id="video-deliverables-options" class="space-y-3 mb-6 text-left max-w-xs mx-auto">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="video-deliverable" id="video-deliverable-short" class="w-4 h-4" onchange="handleDeliverableChange(this)">
+                        <span>Video corto o resumen (5-15min)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="video-deliverable" id="video-deliverable-long" class="w-4 h-4" onchange="handleDeliverableChange(this)">
+                        <span>Video largo (40min - 1hr)</span>
+                    </label>
+                     <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="video-deliverable" id="video-deliverable-both" class="w-4 h-4" onchange="handleDeliverableChange(this)">
+                        <span>Ambos (Corto + Largo)</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" name="video-deliverable" id="video-deliverable-drone" class="w-4 h-4" onchange="validateVideoDeliverables()">
+                        <span>Tomas con Dron</span>
+                    </label>
+                </div>
+                 <p id="video-modal-warning" class="text-red-500 text-sm mb-4 text-center hidden">Debes seleccionar al menos una opción: Corto, Largo o Ambos.</p>
+            </div>
+             <div class="p-6 border-t border-gray-200 flex flex-col sm:flex-row gap-4 sticky bottom-0 bg-white rounded-b-2xl">
+                <button id="confirm-video-btn" onclick="confirmVideoInterest()" class="w-full bg-accent text-white font-bold py-3 px-6 rounded-lg hover:bg-opacity-90 transition-colors" disabled>
+                    Confirmar y solicitar cotización
+                </button>
+                <button onclick="hideVideoModal()" class="w-full bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors">Cancelar</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Summary Modal -->
     <div id="summary-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center p-4 z-50 hidden opacity-0" onclick="hideSummaryModal()">
@@ -222,14 +356,22 @@
             weddingDate: '',
             hours: 0,
             extras: {
-                album: { name: 'Álbum Digital', price: 1500, selected: false, included: false },
-                postCredits: { name: 'Escena Post-Créditos', price: 2000, selected: false, included: false },
-                makeup: { name: 'Maquillaje y Peinado', price: 2500, selected: false, included: false },
-                saveTheDate: { name: 'Sesión "Save the Date"', price: 3300, selected: false, included: false },
-                extraPhotos: { name: '50 Fotos Extras', price: 1500, selected: false, included: false },
-                videographer: { name: 'Videógrafo', price: 0, selected: false, included: false },
-                secondShooter: { name: 'Segundo Fotógrafo', pricePerHour: 350, selected: false, included: false },
-                photobook: { name: 'Photobook Impreso', price: 3000, selected: false, included: false }
+                album: { name: 'Álbum Digital', price: 1500, selected: false, included: false, description: 'Un emotivo video collage con las mejores fotos de tu día.' },
+                postCredits: { name: 'Escena Post-Créditos', price: 2000, selected: false, included: false, description: 'Entrega sorpresa en el día de la boda, cómplice: el novio.' },
+                makeup: { name: 'Maquillaje y Peinado', price: 2500, selected: false, included: false, description: 'Servicio profesional de maquillaje y peinado para el gran día.' },
+                saveTheDate: { name: 'Sesión "Save the Date"', price: 3300, selected: false, included: false, description: 'Una sesión casual antes de la boda para anunciar su compromiso.' },
+                extraPhotos: { name: '50 Fotos Extras', price: 1500, selected: false, included: false, description: 'Asegura 50 fotografías editadas adicionales.' },
+                videographer: {
+                    name: 'Videógrafo',
+                    price: 0,
+                    selected: false,
+                    included: false,
+                    description: 'Un profesional dedicado a capturar la historia de tu boda en video.',
+                    requestedHours: null,
+                    deliverables: []
+                },
+                secondShooter: { name: 'Segundo Fotógrafo', pricePerHour: 350, selected: false, included: false, description: 'Cobertura desde un segundo ángulo para más momentos y detalles.' },
+                photobook: { name: 'Photobook Impreso', price: 3000, selected: false, included: false, description: 'Un libro impreso de alta calidad con la selección de tus mejores fotos.' }
             },
             coverage: {
                 gettingReady: { name: 'Preparativos', value: 0, max: 2 },
@@ -243,11 +385,126 @@
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
+            showIntroModal(); // Show intro modal on load
             buildHourButtons();
             buildTimeline();
             buildExtras();
             updateAllUI();
         });
+
+        // --- INTRO MODAL LOGIC ---
+        function showIntroModal() {
+            const modal = document.getElementById('intro-modal');
+            modal.classList.remove('opacity-0');
+        }
+
+        function hideIntroModal() {
+            const modal = document.getElementById('intro-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300); // Hide after transition
+        }
+
+        function submitIntroData() {
+            const namesInput = document.getElementById('couple-names-modal');
+            const dateInput = document.getElementById('wedding-date-modal');
+            const warning = document.getElementById('modal-warning');
+
+            if (!namesInput.value || !dateInput.value) {
+                warning.classList.remove('hidden');
+            } else {
+                warning.classList.add('hidden');
+                state.coupleNames = namesInput.value;
+                state.weddingDate = dateInput.value;
+                hideIntroModal();
+                updateAllUI(); // Update UI, including button state
+            }
+        }
+
+        // --- VIDEO MODAL LOGIC ---
+        function showVideoModal() {
+            const videoHoursInput = document.getElementById('video-hours');
+            const sameHoursCheckbox = document.getElementById('video-same-hours');
+
+            videoHoursInput.value = state.hours || '';
+            sameHoursCheckbox.checked = true; // Default to checked
+            videoHoursInput.disabled = true; // Disable input initially
+
+            // Reset deliverables
+            document.getElementById('video-deliverable-short').checked = false;
+            document.getElementById('video-deliverable-long').checked = false;
+            document.getElementById('video-deliverable-both').checked = false;
+            document.getElementById('video-deliverable-drone').checked = false;
+            
+            // Reset warning and button state
+            document.getElementById('video-modal-warning').classList.add('hidden');
+            document.getElementById('confirm-video-btn').disabled = true;
+
+
+            const modal = document.getElementById('video-modal');
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
+        }
+
+        function hideVideoModal() {
+            const modal = document.getElementById('video-modal');
+            modal.classList.add('opacity-0');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+        }
+
+        function toggleVideoHoursInput() {
+            const videoHoursInput = document.getElementById('video-hours');
+            const sameHoursCheckbox = document.getElementById('video-same-hours');
+            videoHoursInput.disabled = sameHoursCheckbox.checked;
+            if (sameHoursCheckbox.checked) {
+                videoHoursInput.value = state.hours || ''; // Reset to photo hours if checked
+            }
+        }
+        
+        function validateVideoDeliverables() {
+             const short = document.getElementById('video-deliverable-short').checked;
+             const long = document.getElementById('video-deliverable-long').checked;
+             const both = document.getElementById('video-deliverable-both').checked;
+             const warning = document.getElementById('video-modal-warning');
+             const confirmBtn = document.getElementById('confirm-video-btn');
+
+             const isValid = short || long || both;
+             confirmBtn.disabled = !isValid;
+             warning.classList.toggle('hidden', isValid);
+        }
+
+        function handleDeliverableChange(checkbox) {
+            const short = document.getElementById('video-deliverable-short');
+            const long = document.getElementById('video-deliverable-long');
+            const both = document.getElementById('video-deliverable-both');
+
+            if (checkbox.id === 'video-deliverable-both' && checkbox.checked) {
+                short.checked = false;
+                long.checked = false;
+            } else if ((checkbox.id === 'video-deliverable-short' || checkbox.id === 'video-deliverable-long') && checkbox.checked) {
+                both.checked = false;
+            }
+            
+            validateVideoDeliverables(); // Check validation after any change
+        }
+
+        function confirmVideoInterest() {
+             // Validation is handled by the button's disabled state now
+            state.extras.videographer.selected = true;
+            const sameHoursCheckbox = document.getElementById('video-same-hours');
+            const videoHoursInput = document.getElementById('video-hours');
+
+            state.extras.videographer.requestedHours = sameHoursCheckbox.checked ? state.hours : (parseInt(videoHoursInput.value) || null);
+
+            state.extras.videographer.deliverables = [];
+            if (document.getElementById('video-deliverable-short').checked) state.extras.videographer.deliverables.push('Video Corto (5-15min)');
+            if (document.getElementById('video-deliverable-long').checked) state.extras.videographer.deliverables.push('Video Largo (40min-1hr)');
+            if (document.getElementById('video-deliverable-both').checked) state.extras.videographer.deliverables.push('Ambos (Corto+Largo)');
+            if (document.getElementById('video-deliverable-drone').checked) state.extras.videographer.deliverables.push('Dron');
+
+            hideVideoModal();
+            updateAllUI();
+        }
+
 
         function buildHourButtons() {
             const container = document.getElementById('hours-selection');
@@ -263,20 +520,21 @@
             const isDisabled = state.hours === 0;
             container.innerHTML = Object.keys(state.coverage).map((key, index) => {
                 const item = state.coverage[key];
+                // Mobile: always w-full. md+: alternate margin based on index.
                 const margin = index % 2 === 0 ? 'md:mr-auto' : 'md:ml-auto';
-                const recommendationText = item.max === 1 
-                    ? `(Recomendado: ${item.max}hr)` 
+                const recommendationText = item.max === 1
+                    ? `(Recomendado: ${item.max}hr)`
                     : `(Recomendado: 1-${item.max}hr)`;
 
                 return `
-                <div class="timeline-item relative md:w-1/2 ${margin} mb-10">
+                <div class="timeline-item relative w-full md:w-1/2 ${margin} mb-10">
                     <div class="bg-bg-main p-6 rounded-lg shadow-md border border-gray-100">
                         <h3 class="text-xl font-bold mb-2">${item.name}</h3>
                         <p class="text-sm text-text-light mb-4">${recommendationText}</p>
                         <div class="flex items-center justify-center gap-4">
-                            <button class="text-2xl text-gray-400 hover:text-accent disabled:opacity-50" onclick="changeCoverage('${key}', -1)" ${isDisabled || item.value === 0 ? 'disabled' : ''}>−</button>
+                            <button class="timeline-button" onclick="changeCoverage('${key}', -1)" ${isDisabled || item.value === 0 ? 'disabled' : ''}>−</button>
                             <span class="text-3xl font-bold w-12 text-center">${item.value}</span>
-                            <button class="text-2xl text-gray-400 hover:text-accent disabled:opacity-50" onclick="changeCoverage('${key}', 1)" ${isDisabled || item.value === item.max ? 'disabled' : ''}>+</button>
+                            <button class="timeline-button" onclick="changeCoverage('${key}', 1)" ${isDisabled || item.value === item.max ? 'disabled' : ''}>+</button>
                         </div>
                     </div>
                 </div>
@@ -288,34 +546,44 @@
             const container = document.getElementById('extras-container');
             container.innerHTML = Object.keys(state.extras).map(key => {
                 const extra = state.extras[key];
-                let priceText = (extra.price > 0 || extra.pricePerHour > 0) 
-                    ? `<p class="font-semibold text-accent mt-2 price-tag"></p>` 
-                    : '';
-                
+                let priceText = (extra.price > 0 || extra.pricePerHour > 0)
+                    ? `<p class="font-semibold text-accent mt-2 price-tag"></p>`
+                    : (key === 'videographer' ? `<p class="font-semibold text-accent mt-2 price-tag italic">Cotización Pendiente</p>` : '');
+
+                const onClickAction = key === 'videographer' ? 'handleVideoClick()' : `toggleExtra('${key}')`;
+
                 return `
-                <div id="extra-${key}" class="extra-card p-5 rounded-xl cursor-pointer text-center relative" onclick="toggleExtra('${key}')">
+                <div id="extra-${key}" class="extra-card p-5 rounded-xl cursor-pointer text-center relative group" onclick="${onClickAction}">
                      <span class="extra-status hidden absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
+                     <span class="extra-tooltip">${extra.description}</span>
                     <h4 class="font-bold text-lg">${extra.name}</h4>
                     ${priceText}
                 </div>
                 `;
             }).join('');
         }
-        
+
         // --- STATE & UI UPDATES ---
         function selectHours(h) {
             state.hours = h;
             Object.keys(state.coverage).forEach(key => state.coverage[key].value = 0);
-            
+
             updatePackageInclusions();
-            
+
             Object.values(state.extras).forEach(extra => {
-                extra.selected = extra.included;
+                 // Reset videographer state if hours change
+                 if (extra.name === 'Videógrafo') {
+                     extra.selected = false;
+                     extra.requestedHours = null;
+                     extra.deliverables = [];
+                 } else {
+                    extra.selected = extra.included;
+                 }
             });
 
             updateAllUI();
         }
-        
+
         function updatePackageInclusions() {
              Object.values(state.extras).forEach(extra => extra.included = false);
              if (state.hours === 8) {
@@ -330,7 +598,7 @@
             if (state.hours === 0) return;
             const item = state.coverage[key];
             const assigned = Object.values(state.coverage).reduce((sum, cv) => sum + cv.value, 0);
-            
+
             if (delta > 0 && assigned < state.hours && item.value < item.max) {
                 item.value += delta;
             } else if (delta < 0 && item.value > 0) {
@@ -338,15 +606,33 @@
             }
             updateAllUI();
         }
-        
+
+        function handleVideoClick() {
+            if (state.extras.videographer.selected) {
+                // If already selected, deselect it directly
+                state.extras.videographer.selected = false;
+                state.extras.videographer.requestedHours = null;
+                state.extras.videographer.deliverables = [];
+                updateAllUI();
+            } else {
+                // If not selected, show the modal
+                showVideoModal();
+            }
+        }
+
         function toggleExtra(key) {
+             // This function now handles only non-video extras
+             if (key === 'videographer') return;
+
             state.extras[key].selected = !state.extras[key].selected;
             updateAllUI();
         }
-        
+
         function updateAllUI() {
+            // Update state from modal if needed (already done in submitIntroData)
+
             const total = calculateTotal();
-            
+
             document.querySelectorAll('#hours-selection .hour-btn').forEach(btn => {
                 btn.classList.toggle('selected', parseInt(btn.textContent) === state.hours);
             });
@@ -362,25 +648,30 @@
 
                 if (priceTag) {
                     let displayPrice = 0;
-                    if (extra.pricePerHour > 0) {
+                     if (key === 'videographer') {
+                         priceTag.textContent = 'Cotización Pendiente';
+                         priceTag.style.display = 'block';
+                         priceTag.classList.add('italic');
+                    } else if (extra.pricePerHour > 0 && state.hours > 0) {
                         displayPrice = extra.pricePerHour * state.hours;
                     } else {
                         displayPrice = extra.price;
                     }
 
-                    if (displayPrice > 0) {
+                    if (key !== 'videographer' && displayPrice > 0) {
                         priceTag.textContent = formatCurrency(displayPrice);
                         priceTag.style.display = 'block';
-                    } else {
+                        priceTag.classList.remove('italic');
+                    } else if (key !== 'videographer' && displayPrice <= 0) {
                         priceTag.style.display = 'none';
                     }
                 }
-                
+
                 card.classList.remove('selected', 'included');
                 card.style.opacity = '1';
                 status.textContent = '';
                 status.classList.add('hidden');
-                
+
                 if (extra.included) {
                     card.classList.add('included');
                     if(extra.selected) {
@@ -393,6 +684,9 @@
                     card.classList.add('selected');
                     status.textContent = 'Seleccionado';
                     status.classList.remove('hidden');
+                     if (key === 'videographer') { // Special label for video
+                         status.textContent = 'Cotización Solicitada';
+                     }
                 }
             });
 
@@ -401,13 +695,25 @@
             const photoEstimate = getPhotoEstimate(state.hours);
             document.getElementById('summary-photos').textContent = photoEstimate;
             document.getElementById('summary-photos-divider').style.display = photoEstimate ? 'inline' : 'none';
-            document.getElementById('summary-total').textContent = formatCurrency(total);
+            document.getElementById('summary-total').textContent = formatCurrency(total) + (state.extras.videographer.selected ? ' + Video' : ''); // Indicate video pending
+
+            // Habilitar o deshabilitar el botón de resumen basado en TODO
+            const assigned = Object.values(state.coverage).reduce((sum, item) => sum + item.value, 0);
+            const summaryButton = document.getElementById('show-summary-btn');
+            // Check state variables populated by the modal
+            const canShowSummary = state.coupleNames && state.weddingDate && state.hours > 0 && assigned === state.hours;
+
+            summaryButton.disabled = !canShowSummary;
+            // summaryButton.classList.toggle('opacity-50', !canShowSummary); // Managed by :disabled styles
+            // summaryButton.classList.toggle('cursor-not-allowed', !canShowSummary); // Managed by :disabled styles
+
+            // Editor and summary bar are now always visible after modal closes
         }
-        
+
         function updateCoverageWarning() {
             const assigned = Object.values(state.coverage).reduce((sum, item) => sum + item.value, 0);
             const warningEl = document.getElementById('coverage-warning');
-            
+
             if (state.hours === 0) {
                 warningEl.textContent = 'Por favor, elige una cobertura de horas para empezar a construir tu línea de tiempo.';
                 warningEl.className = 'bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded-lg relative mb-6';
@@ -428,7 +734,7 @@
 
         // --- CALCULATIONS ---
         const formatCurrency = (value) => value.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
-        
+
         const getPackageName = (h) => {
             if (h === 0) return 'Elige tu plan';
             if (h < 8) return 'Plan Piloto';
@@ -453,28 +759,31 @@
             const prices = { 10: 29990, 8: 19990, 6: 16990, 4: 8890, 2: 4490 };
             return prices[h] || 0;
         }
-        
+
         function calculateTotal() {
             let total = getBasePrice(state.hours);
             Object.keys(state.extras).forEach(key => {
+                // Exclude videographer from price calculation
+                if (key === 'videographer') return;
+
                 const extra = state.extras[key];
-                const dynamicPrice = extra.pricePerHour ? extra.pricePerHour * state.hours : extra.price;
+                const dynamicPrice = (extra.pricePerHour && state.hours > 0) ? extra.pricePerHour * state.hours : extra.price;
 
                 if (extra.selected && !extra.included) {
                     total += dynamicPrice;
                 } else if (!extra.selected && extra.included) {
-                    total -= dynamicPrice;
+                    // Solo resta si el precio dinámico es calculable (hay horas seleccionadas)
+                    if (dynamicPrice > 0 || extra.price > 0) {
+                         total -= dynamicPrice;
+                    }
                 }
             });
-            return total;
+             return total < 0 ? 0 : total; // Ensure total doesn't go below 0
         }
-        
+
         // --- SUMMARY MODAL & WHATSAPP ---
         function showSummaryModal() {
-            if (state.hours === 0) {
-                alert("Por favor, selecciona un plan de horas antes de ver el resumen.");
-                return;
-            }
+            // La comprobación de deshabilitado ya está en el botón
             generateSummaryContent();
             const modal = document.getElementById('summary-modal');
             modal.classList.remove('hidden');
@@ -489,35 +798,46 @@
 
         function generateSummaryContent() {
             const container = document.getElementById('summary-card');
-            state.coupleNames = document.getElementById('couple-names').value;
-            state.weddingDate = document.getElementById('wedding-date').value;
+            // Ensure state reflects current input values (already stored from modal)
 
             let dateFormatted = 'Fecha por confirmar';
             if (state.weddingDate) {
-                const date = new Date(state.weddingDate + 'T12:00:00');
+                const date = new Date(state.weddingDate + 'T12:00:00'); // Add time to avoid timezone issues
                 dateFormatted = date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
             }
 
             const total = calculateTotal();
-            
+             const videoText = state.extras.videographer.selected ? ' <span class="text-lg md:text-xl text-text-light">+ Video (Cotización Pendiente)</span>' : '';
+            const totalString = `${formatCurrency(total)}${videoText}`;
+
+
             const coverageItems = Object.keys(state.coverage)
                 .filter(key => state.coverage[key].value > 0)
                 .map(key => `<li class="flex justify-between"><span>${state.coverage[key].name}</span><span class="font-medium">${state.coverage[key].value}h</span></li>`)
                 .join('');
-            
+
             const extrasItems = Object.keys(state.extras)
                 .filter(key => state.extras[key].selected)
                 .map(key => {
                     const extra = state.extras[key];
                     let priceHtml = '';
-                    if (extra.included && extra.selected) {
-                        priceHtml = `<span class="font-medium text-accent">Incluido</span>`;
-                    } else if (extra.pricePerHour) {
-                        priceHtml = `<span class="font-medium">${formatCurrency(extra.pricePerHour * state.hours)}</span>`;
-                    } else if (extra.price > 0) {
-                        priceHtml = `<span class="font-medium">${formatCurrency(extra.price)}</span>`;
+
+                    if (key === 'videographer') {
+                         priceHtml = `<span class="font-medium italic text-accent">Cotización Pendiente</span>`;
+                    } else {
+                        const dynamicPrice = (extra.pricePerHour && state.hours > 0) ? extra.pricePerHour * state.hours : extra.price;
+                        if (extra.included && extra.selected) {
+                            priceHtml = `<span class="font-medium text-accent">Incluido</span>`;
+                        } else if (dynamicPrice > 0) {
+                            priceHtml = `<span class="font-medium">${formatCurrency(dynamicPrice)}</span>`;
+                        }
                     }
-                    return `<li class="flex justify-between"><span>${extra.name}</span>${priceHtml}</li>`;
+                     // Add Video details if selected
+                     let videoDetails = '';
+                     if (key === 'videographer') {
+                         videoDetails = ` (${state.extras.videographer.requestedHours || '?'}h, ${state.extras.videographer.deliverables.join(', ') || 'Sin entregables'})`;
+                     }
+                    return `<li class="flex justify-between"><span>${extra.name}${videoDetails}</span>${priceHtml}</li>`;
                 })
                 .join('');
 
@@ -528,7 +848,7 @@
                     <p class="text-lg text-text-light mt-2">${state.coupleNames || 'La Boda de'}</p>
                     <p class="text-md text-text-light">${dateFormatted}</p>
                 </div>
-                
+
                 <div class="border-t border-gray-200 pt-6 space-y-6 text-text-light">
                     <div>
                         <h3 class="font-bold text-lg text-text-dark mb-3">Resumen de Cobertura</h3>
@@ -558,18 +878,24 @@
                             </ul>
                         </div>
                     </div>
+                     <div class="mt-4"> <!-- Added Terminos section -->
+                        <h3 class="font-bold text-lg text-text-dark mb-2">Términos</h3>
+                        <p class="text-xs text-text-light italic">Esta cotización es válida únicamente en la ciudad de Tijuana o Rosarito.</p>
+                    </div>
                 </div>
 
                 <div class="border-t-2 border-accent mt-8 pt-6">
-                    <div class="flex justify-between items-center text-3xl">
-                        <p class="font-bold">TOTAL:</p>
-                        <p class="font-bold text-accent">${formatCurrency(total)}</p>
+                    <div class="text-right sm:flex sm:justify-between sm:items-baseline"> <!-- Responsive TOTAL section -->
+                         <p class="font-bold text-2xl md:text-3xl text-left mb-1 sm:mb-0">TOTAL:</p>
+                        <p class="font-bold text-accent text-2xl md:text-3xl">${totalString}</p>
                     </div>
                 </div>
             `;
         }
-        
+
         function sendWhatsAppSummary() {
+            // State is already updated from the modal
+
             const phoneNumber = "526643372791"; // Reemplaza con tu número de WhatsApp
             let message = `¡Hola, Saúl! Estoy interesado/a en este plan de fotografía para mi boda.\n\n`;
             message += `*Detalles del Paquete:*\n`;
@@ -577,28 +903,35 @@
             message += `*Nombres:* ${state.coupleNames || 'No especificado'}\n`;
             message += `*Fecha:* ${state.weddingDate || 'No especificada'}\n\n`;
             message += `*Plan:* ${getPackageName(state.hours)}\n`;
-            message += `*Cobertura:* ${state.hours} Horas\n`;
+            message += `*Cobertura Fotografía:* ${state.hours} Horas\n`;
             message += `*Fotos Estimadas:* ${getPhotoEstimate(state.hours)}\n`;
-            message += `*Precio Total:* ${formatCurrency(calculateTotal())}\n\n`;
+             const totalString = formatCurrency(calculateTotal()) + (state.extras.videographer.selected ? ' + Video (Cotización Pendiente)' : '');
+            message += `*Precio Total:* ${totalString}\n\n`;
 
             const coverageItems = Object.keys(state.coverage)
                 .filter(key => state.coverage[key].value > 0)
                 .map(key => `- ${state.coverage[key].name}: ${state.coverage[key].value}h`)
                 .join('\n');
-            
+
             if(coverageItems) {
-                message += `*Distribución de Horas:*\n${coverageItems}\n\n`;
+                message += `*Distribución de Horas (Fotografía):*\n${coverageItems}\n\n`;
             }
 
             const extrasItems = Object.keys(state.extras)
                 .filter(key => state.extras[key].selected)
-                .map(key => `- ${state.extras[key].name}`)
+                .map(key => {
+                     let itemText = `- ${state.extras[key].name}`;
+                     if (key === 'videographer') {
+                         itemText += ` (Solicitud: ${state.extras.videographer.requestedHours || '?'}h, ${state.extras.videographer.deliverables.join(', ') || 'Sin entregables especificados'})`;
+                     }
+                     return itemText;
+                })
                 .join('\n');
 
             if(extrasItems) {
                 message += `*Extras Incluidos:*\n${extrasItems}\n\n`;
             }
-            
+
             message += `¡Espero tu respuesta!`;
 
             const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
@@ -608,6 +941,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
