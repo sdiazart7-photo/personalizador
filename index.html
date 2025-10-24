@@ -34,7 +34,12 @@
             font-family: 'Glacial Indifference', sans-serif;
             background-color: var(--bg-main);
             color: var(--text-dark);
-            padding-bottom: 90px; /* Increased padding slightly */
+            padding-bottom: 90px;
+        }
+
+        /* Prevent scroll when modal is open */
+        body.overflow-hidden {
+            overflow: hidden;
         }
 
         /* Use Playfair Display for Titles */
@@ -397,12 +402,16 @@
         function showIntroModal() {
             const modal = document.getElementById('intro-modal');
             modal.classList.remove('opacity-0');
+             document.body.classList.add('overflow-hidden'); // Block scroll
         }
 
         function hideIntroModal() {
             const modal = document.getElementById('intro-modal');
             modal.classList.add('opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300); // Hide after transition
+            setTimeout(() => {
+                 modal.classList.add('hidden');
+                 document.body.classList.remove('overflow-hidden'); // Restore scroll
+             }, 300);
         }
 
         function submitIntroData() {
@@ -443,13 +452,17 @@
 
             const modal = document.getElementById('video-modal');
             modal.classList.remove('hidden');
+             document.body.classList.add('overflow-hidden'); // Block scroll
             setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
 
         function hideVideoModal() {
             const modal = document.getElementById('video-modal');
             modal.classList.add('opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
+            setTimeout(() => {
+                 modal.classList.add('hidden');
+                 document.body.classList.remove('overflow-hidden'); // Restore scroll
+             }, 300);
         }
 
         function toggleVideoHoursInput() {
@@ -788,13 +801,17 @@
             generateSummaryContent();
             const modal = document.getElementById('summary-modal');
             modal.classList.remove('hidden');
+             document.body.classList.add('overflow-hidden'); // Block scroll
             setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
 
         function hideSummaryModal() {
             const modal = document.getElementById('summary-modal');
             modal.classList.add('opacity-0');
-            setTimeout(() => modal.classList.add('hidden'), 300);
+            setTimeout(() => {
+                 modal.classList.add('hidden');
+                 document.body.classList.remove('overflow-hidden'); // Restore scroll
+             }, 300);
         }
 
         function generateSummaryContent() {
@@ -942,18 +959,6 @@
     </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
