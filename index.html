@@ -29,6 +29,10 @@
         html {
             scroll-behavior: smooth;
         }
+        /* Apply overflow hidden to html as well */
+        html.overflow-hidden {
+            overflow: hidden;
+        }
 
         body {
             font-family: 'Glacial Indifference', sans-serif;
@@ -205,6 +209,27 @@
             opacity: 0.6;
             cursor: not-allowed;
         }
+        /* Style for date input placeholder */
+        input[type="date"]::placeholder {
+            color: var(--text-light);
+            opacity: 1; /* Firefox */
+        }
+        input[type="date"]::-webkit-input-placeholder { /* Edge/Chrome/Safari */
+             color: var(--text-light);
+        }
+        input[type="date"]::-moz-placeholder { /* Firefox 19+ */
+             color: var(--text-light);
+             opacity: 1;
+        }
+        input[type="date"]:-ms-input-placeholder { /* IE 10-11 */
+             color: var(--text-light);
+        }
+        input[type="date"]::-ms-input-placeholder { /* Edge */
+             color: var(--text-light);
+        }
+        input[type="date"]:placeholder-shown { /* Default text when empty */
+             color: var(--text-light);
+        }
     </style>
 </head>
 <body class="overflow-x-hidden">
@@ -281,7 +306,7 @@
 
             <div class="grid grid-cols-1 gap-4 mt-8 w-full">
                 <input type="text" id="couple-names-modal" placeholder="Nombres de la Pareja (Ej: Ana y Carlos)" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
-                <input type="date" id="wedding-date-modal" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
+                <input type="date" id="wedding-date-modal" placeholder="Fecha de la Boda" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
             </div>
 
             <p id="modal-warning" class="text-red-500 text-sm mt-4 hidden">Por favor, completa ambos campos.</p>
@@ -423,7 +448,7 @@
                  document.body.style.width = '';
                  document.body.style.top = '';
                  document.body.classList.remove('modal-open');
-                 window.scrollTo(0, scrollPosition); // Restore scroll position
+                 window.scrollTo(0, scrollPosition); // Restore scroll position BEFORE removing fixed
              }, 300);
         }
 
@@ -478,11 +503,11 @@
             modal.classList.add('opacity-0');
             setTimeout(() => {
                  modal.classList.add('hidden');
+                 window.scrollTo(0, scrollPosition); // Restore scroll position FIRST
                  document.body.style.position = ''; // Remove fixed styles
                  document.body.style.width = '';
                  document.body.style.top = '';
                  document.body.classList.remove('modal-open');
-                 window.scrollTo(0, scrollPosition); // Restore scroll position
              }, 300);
         }
 
@@ -835,11 +860,11 @@
             modal.classList.add('opacity-0');
             setTimeout(() => {
                  modal.classList.add('hidden');
+                 window.scrollTo(0, scrollPosition); // Restore scroll position FIRST
                  document.body.style.position = ''; // Remove fixed styles
                  document.body.style.width = '';
                  document.body.style.top = '';
                  document.body.classList.remove('modal-open');
-                 window.scrollTo(0, scrollPosition); // Restore scroll position
              }, 300);
         }
 
@@ -988,6 +1013,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 
