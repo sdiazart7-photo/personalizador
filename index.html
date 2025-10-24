@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Mesa de Edición de Bodas - Fotografía Esencial</title>
+    <title>Cotizador - Finite estudio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,6 +28,10 @@
 
         html {
             scroll-behavior: smooth;
+        }
+        /* Apply overflow hidden to html as well */
+        html.overflow-hidden {
+            overflow: hidden;
         }
 
         body {
@@ -402,7 +406,8 @@
         function showIntroModal() {
             const modal = document.getElementById('intro-modal');
             modal.classList.remove('opacity-0');
-             document.body.classList.add('overflow-hidden'); // Block scroll
+             document.documentElement.classList.add('overflow-hidden'); // Block scroll on HTML
+             document.body.classList.add('overflow-hidden'); // Block scroll on BODY
         }
 
         function hideIntroModal() {
@@ -410,7 +415,8 @@
             modal.classList.add('opacity-0');
             setTimeout(() => {
                  modal.classList.add('hidden');
-                 document.body.classList.remove('overflow-hidden'); // Restore scroll
+                 document.documentElement.classList.remove('overflow-hidden'); // Restore scroll on HTML
+                 document.body.classList.remove('overflow-hidden'); // Restore scroll on BODY
              }, 300);
         }
 
@@ -452,7 +458,8 @@
 
             const modal = document.getElementById('video-modal');
             modal.classList.remove('hidden');
-             document.body.classList.add('overflow-hidden'); // Block scroll
+             document.documentElement.classList.add('overflow-hidden'); // Block scroll on HTML
+             document.body.classList.add('overflow-hidden'); // Block scroll on BODY
             setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
 
@@ -461,7 +468,8 @@
             modal.classList.add('opacity-0');
             setTimeout(() => {
                  modal.classList.add('hidden');
-                 document.body.classList.remove('overflow-hidden'); // Restore scroll
+                 document.documentElement.classList.remove('overflow-hidden'); // Restore scroll on HTML
+                 document.body.classList.remove('overflow-hidden'); // Restore scroll on BODY
              }, 300);
         }
 
@@ -801,7 +809,8 @@
             generateSummaryContent();
             const modal = document.getElementById('summary-modal');
             modal.classList.remove('hidden');
-             document.body.classList.add('overflow-hidden'); // Block scroll
+             document.documentElement.classList.add('overflow-hidden'); // Block scroll on HTML
+             document.body.classList.add('overflow-hidden'); // Block scroll on BODY
             setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
 
@@ -810,7 +819,8 @@
             modal.classList.add('opacity-0');
             setTimeout(() => {
                  modal.classList.add('hidden');
-                 document.body.classList.remove('overflow-hidden'); // Restore scroll
+                 document.documentElement.classList.remove('overflow-hidden'); // Restore scroll on HTML
+                 document.body.classList.remove('overflow-hidden'); // Restore scroll on BODY
              }, 300);
         }
 
@@ -959,6 +969,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 
