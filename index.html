@@ -227,8 +227,12 @@
         input[type="date"]::-ms-input-placeholder { /* Edge */
              color: var(--text-light);
         }
-        input[type="date"]:placeholder-shown { /* Default text when empty */
-             color: var(--text-light);
+        /* Keep date input text dark when value is selected */
+        input[type="date"] {
+            color: var(--text-dark);
+        }
+        input[type="date"]:placeholder-shown {
+            color: var(--text-light); /* Only placeholder text is light */
         }
     </style>
 </head>
@@ -304,9 +308,15 @@
             <h1 class="text-2xl md:text-3xl font-bold mb-2">¡Bienvenido/a!</h1>
             <p class="text-md text-text-light mb-6">Antes de empezar, cuéntanos un poco sobre ustedes.</p>
 
-            <div class="grid grid-cols-1 gap-4 mt-8 w-full">
-                <input type="text" id="couple-names-modal" placeholder="Nombres de la Pareja (Ej: Ana y Carlos)" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
-                <input type="date" id="wedding-date-modal" placeholder="Fecha de la Boda" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center">
+            <div class="space-y-4 mt-8 w-full text-left">
+                 <div>
+                     <label for="couple-names-modal" class="block text-sm font-semibold mb-1">Nombre de la Pareja</label>
+                     <input type="text" id="couple-names-modal" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg w-full">
+                 </div>
+                 <div>
+                     <label for="wedding-date-modal" class="block text-sm font-semibold mb-1">Fecha de la Boda</label>
+                    <input type="date" id="wedding-date-modal" class="p-3 bg-gray-50 text-text-dark border border-gray-300 rounded-lg w-full">
+                 </div>
             </div>
 
             <p id="modal-warning" class="text-red-500 text-sm mt-4 hidden">Por favor, completa ambos campos.</p>
@@ -419,6 +429,25 @@
         const availableHours = [10, 8, 6, 4, 2];
         let scrollPosition = 0; // Variable to store scroll position
 
+        // --- SCROLL LOCK UTILITIES ---
+        function lockScroll() {
+            scrollPosition = window.scrollY;
+            document.body.style.position = 'fixed';
+            document.body.style.width = '100%';
+            document.body.style.top = `-${scrollPosition}px`;
+            document.body.classList.add('modal-open');
+            document.documentElement.classList.add('overflow-hidden'); // Apply to html
+        }
+
+        function unlockScroll() {
+             window.scrollTo(0, scrollPosition); // Restore scroll position BEFORE removing fixed styles
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+            document.body.classList.remove('modal-open');
+            document.documentElement.classList.remove('overflow-hidden'); // Remove from html
+        }
+
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             showIntroModal(); // Show intro modal on load
@@ -431,12 +460,9 @@
         // --- INTRO MODAL LOGIC ---
         function showIntroModal() {
             const modal = document.getElementById('intro-modal');
-            scrollPosition = window.scrollY; // Store scroll position
-            document.body.style.position = 'fixed';
-            document.body.style.width = '100%';
-            document.body.style.top = `-${scrollPosition}px`;
-            document.body.classList.add('modal-open'); // Optional: Add class if needed for other styles
-            modal.classList.remove('opacity-0', 'hidden'); // Show modal immediately
+            lockScroll();
+            modal.classList.remove('hidden');
+            setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
 
         function hideIntroModal() {
@@ -444,11 +470,7 @@
             modal.classList.add('opacity-0');
             setTimeout(() => {
                  modal.classList.add('hidden');
-                 document.body.style.position = ''; // Remove fixed styles
-                 document.body.style.width = '';
-                 document.body.style.top = '';
-                 document.body.classList.remove('modal-open');
-                 window.scrollTo(0, scrollPosition); // Restore scroll position BEFORE removing fixed
+                 unlockScroll();
              }, 300);
         }
 
@@ -489,11 +511,7 @@
 
 
             const modal = document.getElementById('video-modal');
-             scrollPosition = window.scrollY; // Store scroll position
-             document.body.style.position = 'fixed';
-             document.body.style.width = '100%';
-             document.body.style.top = `-${scrollPosition}px`;
-             document.body.classList.add('modal-open');
+            lockScroll();
             modal.classList.remove('hidden');
             setTimeout(() => modal.classList.remove('opacity-0'), 10);
         }
@@ -503,11 +521,7 @@
             modal.classList.add('opacity-0');
             setTimeout(() => {
                  modal.classList.add('hidden');
-                 window.scrollTo(0, scrollPosition); // Restore scroll position FIRST
-                 document.body.style.position = ''; // Remove fixed styles
-                 document.body.style.width = '';
-                 document.body.style.top = '';
-                 document.body.classList.remove('modal-open');
+                 unlockScroll();
              }, 300);
         }
 
@@ -1013,6 +1027,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 
