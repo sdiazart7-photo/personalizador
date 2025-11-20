@@ -3,7 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Título de la Página -->
     <title>Cotizador - Finite Estudio</title>
+    
+    <!-- Metadatos para Redes Sociales y WhatsApp (Open Graph) -->
+    <meta property="og:title" content="Cotizador - Finite Estudio">
+    <meta property="og:description" content="Personaliza el paquete de fotografía perfecto para tu boda.">
+    <meta property="og:image" content="https://res.cloudinary.com/drrhn6t1c/image/upload/v1755893180/a_r_-_web_28_eram4m.jpg">
+    <meta property="og:url" content="https://finiteestudio.com">
+    <meta property="og:type" content="website">
+
+    <!-- Metadatos para Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Cotizador - Finite Estudio">
+    <meta name="twitter:description" content="Personaliza el paquete de fotografía perfecto para tu boda.">
+    <meta name="twitter:image" content="https://res.cloudinary.com/drrhn6t1c/image/upload/v1755893180/a_r_-_web_28_eram4m.jpg">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -39,11 +55,15 @@
             background-color: var(--bg-main);
             color: var(--text-dark);
             padding-top: 40px; /* Space for the warning bar */
+            padding-bottom: 120px; /* Important: Space for fixed footer */
         }
 
         /* Styles to apply when modal is open */
-        body.overflow-hidden {
-            overflow: hidden;
+        body.modal-open {
+             /* Prevent scrolling */
+            position: fixed;
+            width: 100%;
+            overflow-y: scroll; /* Keep scrollbar space to avoid layout shifts */
         }
 
 
@@ -63,7 +83,6 @@
             background-size: cover;
             background-position: center 30%;
             position: relative;
-            /* Removed margin-top */
         }
         #hero::before {
             content: '';
@@ -247,7 +266,7 @@
     </style>
 </head>
 <body class="overflow-x-hidden">
-
+    
     <div id="price-warning-bar" class="fixed top-0 left-0 right-0 w-full bg-accent text-white text-center p-2 text-sm font-semibold z-30">
         ¡Atención! Estos precios son válidos hasta el 31 de diciembre de 2025.
     </div>
@@ -294,11 +313,11 @@
         </main>
     </div>
 
-    <!-- Static Summary Bar at the end -->
-    <footer id="floating-summary-bar" class="bg-white shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)] p-4">
+    <!-- Fixed Summary Bar at the end -->
+    <footer id="floating-summary-bar" class="fixed bottom-0 left-0 right-0 w-full bg-white shadow-[0_-5px_20px_-5px_rgba(0,0,0,0.1)] p-4 z-50">
         <div class="container mx-auto flex flex-col sm:flex-row justify-between items-center text-center sm:text-left">
             <div class="w-full sm:w-auto sm:flex-1 mb-2 sm:mb-0">
-                <p class="font-bold text-lg" id="summary-package-name">Elige tu plan</p>
+                <p class="font-bold text-lg" id="summary-package-name">Elige tu paquete</p>
                 <div class="flex items-center justify-center sm:justify-start gap-2 text-sm text-text-light">
                      <span id="summary-hours">0 Horas</span>
                      <span id="summary-photos-divider" class="hidden">|</span>
@@ -357,7 +376,7 @@
                      <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
                         <input type="number" id="video-hours" min="2" max="10" step="2" placeholder="Horas" class="p-3 w-20 bg-gray-50 text-text-dark border border-gray-300 rounded-lg text-center disabled:opacity-50">
                          <label class="flex items-center gap-2 cursor-pointer text-sm sm:text-base">
-                            <input type="checkbox" id="video-same-hours" class="w-4 h-4" onchange="toggleVideoHoursInput()">
+                            <input type="checkbox" id="video-same-hours" class="w-4 h-4" checked onchange="toggleVideoHoursInput()">
                             <span>Mismas horas que fotografía</span>
                         </label>
                      </div>
@@ -420,10 +439,10 @@
 
         // Precios 2025 (actuales - los "anteriores" que pediste)
         const prices_2025 = {
-            base: { 10: 29990, 8: 19990, 6: 13190, 4: 8890, 2: 4490 }, // Precios de 2/4/6 actualizados
+            base: { 6: 13190, 4: 8890, 2: 4490 }, 
             extras: {
                 album: 1500,
-                previewExpress: 1500, // Precio actualizado
+                previewExpress: 1500,
                 makeup: 2500,
                 saveTheDate: 3300,
                 photobook: 3000,
@@ -436,7 +455,7 @@
             10: ['album', 'previewExpress'] // Logic from before
         };
 
-        // Precios 2026 (futuros - los que me diste hace dos prompts)
+        // Precios 2026 (futuros)
         const prices_2026 = {
             base: { 10: 28190, 8: 26190, 6: 18190, 4: 9490, 2: 4790 },
             extras: {
@@ -469,7 +488,7 @@
             hours: 0,
             extras: {
                 album: { name: 'Álbum Digital', price: activePrices.extras.album, selected: false, included: false, description: 'Un emotivo video collage con las mejores fotos de tu día.' },
-                previewExpress: { name: 'Preview Express', price: activePrices.extras.previewExpress, selected: false, included: false, description: 'Un adelanto de tus fotos días después de la boda.' },
+                previewExpress: { name: 'Preview Express', price: activePrices.extras.previewExpress, selected: false, included: false, description: 'Un adelanto de tus fotos 3 días después de tu boda.' },
                 makeup: { name: 'Maquillaje y Peinado', price: activePrices.extras.makeup, selected: false, included: false, description: 'Servicio profesional de maquillaje y peinado para el gran día.' },
                 saveTheDate: { name: 'Sesión "Save the Date"', price: activePrices.extras.saveTheDate, selected: false, included: false, description: 'Una sesión casual antes de la boda para anunciar su compromiso.' },
                 photobook: { name: 'Álbum Impreso', price: activePrices.extras.photobook, selected: false, included: false, description: 'Un libro impreso de alta calidad con la selección de tus mejores fotos.' },
@@ -618,7 +637,7 @@
 
              const isValid = short || long || both;
              confirmBtn.disabled = !isValid;
-             warning.classList.toggle('hidden', !isValid);
+             warning.classList.toggle('hidden', isValid);
         }
 
         function handleDeliverableChange(checkbox) {
@@ -696,12 +715,12 @@
             container.innerHTML = activeExtras.map(key => { // Use activeExtras
                 const extra = state.extras[key];
                 
-                let priceText = ''; // Changed name
+                let descOrPriceText = '';
                 if (key === 'videographer') {
-                        priceText = `<p class="font-semibold text-accent mt-2 text-sm italic">Cotización Pendiente</p>`;
+                        descOrPriceText = `<p class="font-semibold text-accent mt-2 text-sm italic">Cotización Pendiente</p>`;
                 } else if (extra.price > 0 || extra.pricePerHour > 0) {
-                     // Add the p tag with class, updateAllUI will fill it
-                     priceText = `<p class="font-semibold text-accent mt-2 text-sm price-tag"></p>`;
+                     // Re-add the price-tag element
+                     descOrPriceText = `<p class="font-semibold text-accent mt-2 text-sm price-tag"></p>`;
                 }
 
                 const onClickAction = key === 'videographer' ? 'handleVideoClick()' : `toggleExtra('${key}')`;
@@ -711,7 +730,7 @@
                      <span class="extra-status hidden absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full"></span>
                      <span class="extra-tooltip">${extra.description}</span>
                     <h4 class="font-bold text-lg">${extra.name}</h4>
-                    ${priceText}
+                    ${descOrPriceText}
                 </div>
                 `;
             }).join('');
@@ -811,18 +830,30 @@
 
                 if (priceTag) { // Check if priceTag exists
                     let displayPrice = 0;
-                    if (extra.pricePerHour > 0 && state.hours > 0) {
-                        displayPrice = extra.pricePerHour * state.hours;
-                        priceTag.textContent = formatCurrency(displayPrice);
-                        priceTag.style.display = 'block';
-                        priceTag.classList.remove('italic');
+                    let priceText = '';
+
+                     if (key === 'videographer') {
+                         priceText = 'Cotización Pendiente';
+                         priceTag.classList.add('italic');
+                    } else if (extra.pricePerHour > 0) {
+                         if (state.hours > 0) {
+                             displayPrice = extra.pricePerHour * state.hours;
+                             priceText = formatCurrency(displayPrice);
+                         } else {
+                             priceText = ''; // Hide price per hour until hours selected
+                         }
+                         priceTag.classList.remove('italic');
                     } else if (extra.price > 0) {
                          displayPrice = extra.price;
-                         priceTag.textContent = formatCurrency(displayPrice);
-                         priceTag.style.display = 'block';
+                         priceText = formatCurrency(displayPrice);
                          priceTag.classList.remove('italic');
+                    }
+
+                    if (priceText) {
+                        priceTag.textContent = priceText;
+                        priceTag.style.display = 'block';
                     } else {
-                         priceTag.style.display = 'none'; // Hide if no price/hours
+                        priceTag.style.display = 'none';
                     }
                 }
                 
@@ -912,16 +943,18 @@
         const formatCurrency = (value) => value.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });
 
         const getPackageName = (h) => {
-            if (h === 0) return 'Elige tu plan';
-            if (h < 8) return 'Plan Piloto';
-            if (h === 8) return 'Plan Secuela';
-            if (h === 10) return 'Plan Trilogía';
-            return 'Plan Personalizado';
+            if (h === 0) return 'Elige tu paquete';
+            if (h < 8) return 'Paquete Piloto';
+            if (h === 8) return 'Paquete Secuela';
+            if (h === 10) return 'Paquete Trilogía';
+            // if (h === 12) return 'Paquete Trilogía'; // Removed 12 hour case
+            return 'Paquete Personalizado';
         };
 
         const getPhotoEstimate = (h) => {
             if (h === 0) return '';
             const estimates = {
+                // 12: '600-700 fotos', // Removed 12 hour estimate
                 10: '500-600 fotos',
                 8: '300-400 fotos',
                 6: '250-300 fotos',
@@ -942,13 +975,7 @@
                 if (key === 'videographer') return;
 
                 const extra = state.extras[key];
-                let dynamicPrice = 0;
-                if(key === 'secondShooter') {
-                    dynamicPrice = (activePrices.extras.secondShooter && state.hours > 0) ? activePrices.extras.secondShooter * state.hours : 0;
-                } else if (activePrices.extras[key]) {
-                    dynamicPrice = activePrices.extras[key];
-                }
-
+                const dynamicPrice = (extra.pricePerHour && state.hours > 0) ? extra.pricePerHour * state.hours : extra.price;
 
                 // Only add price if it's selected AND NOT included
                 if (extra.selected && !extra.included) {
@@ -1013,17 +1040,11 @@
                     if (key === 'videographer') {
                          priceHtml = `<span class="font-medium italic text-accent">Cotización Pendiente</span>`;
                     } else {
-                        let dynamicPrice = 0;
-                        if (key === 'secondShooter') {
-                            dynamicPrice = (activePrices.extras.secondShooter && state.hours > 0) ? activePrices.extras.secondShooter * state.hours : 0;
-                        } else if (activePrices.extras[key]) {
-                            dynamicPrice = activePrices.extras[key];
-                        }
-                        
+                        const dynamicPrice = (extra.pricePerHour && state.hours > 0) ? extra.pricePerHour * state.hours : extra.price;
                         if (extra.included && extra.selected) {
                             priceHtml = `<span class="font-medium text-accent">Incluido</span>`;
                         } else if (dynamicPrice > 0) {
-                             // Price hidden in summary
+                            priceHtml = `<span class="font-medium">${formatCurrency(dynamicPrice)}</span>`;
                         }
                     }
                      // Add Video details if selected
@@ -1091,12 +1112,12 @@
             // State is already updated from the modal
 
             const phoneNumber = "526643372791"; // Reemplaza con tu número de WhatsApp
-            let message = `¡Hola, Saúl! Estoy interesado/a en este plan de fotografía para mi boda.\n\n`;
+            let message = `¡Hola, Saúl! Estoy interesado/a en este paquete de fotografía para mi boda.\n\n`;
             message += `*Detalles del Paquete:*\n`;
             message += `-------------------------\n`;
             message += `*Nombres:* ${state.coupleNames || 'No especificado'}\n`;
             message += `*Fecha:* ${state.weddingDate || 'No especificada'}\n\n`;
-            message += `*Plan:* ${getPackageName(state.hours)}\n`;
+            message += `*Paquete:* ${getPackageName(state.hours)}\n`;
             message += `*Cobertura Fotografía:* ${state.hours} Horas\n`;
             message += `*Fotos Estimadas:* ${getPhotoEstimate(state.hours)}\n`;
              const totalString = formatCurrency(calculateTotal()) + (state.extras.videographer.selected ? ' + Video (Cotización Pendiente)' : '');
@@ -1135,6 +1156,7 @@
     </script>
 </body>
 </html>
+
 
 
 
